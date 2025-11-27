@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selector Lumix Mirrorless 2025 (Beta)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Roboto Condensed -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        lumix: {
+                            red: '#E60012',
+                            dark: '#121212',
+                            gray: '#2A2A2A',
+                            light: '#E5E5E5'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        tech: ['Roboto Condensed', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #e5e5e5;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #E60012; }
+
+        .lumix-card {
+            transition: all 0.3s ease;
+            border: 1px solid #333;
+        }
+        .lumix-card:hover {
+            transform: translateY(-5px);
+            border-color: #E60012;
+            box-shadow: 0 10px 30px -10px rgba(230, 0, 18, 0.3);
+        }
+
+        .lumix-checkbox:checked {
+            background-color: #E60012;
+            border-color: #E60012;
+        }
+
+        /* --- SOLUCIÓN DEFINITIVA DE IMPRESIÓN (v13) --- */
+        @media print {
+            @page { 
+                margin: 0.5cm; 
+                size: landscape; 
+            }
+            
+            /* Ocultar TODO el sitio por defecto */
+            body * {
+                visibility: hidden;
+            }
+
+            /* Resetear el body para que sea un lienzo blanco */
+            body {
+                background-color: white !important;
+                color: black !important;
+                position: static !important;
+                overflow: visible !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Hacer visible SOLO el contenido del modal abierto y sus hijos */
+            #comparison-modal, #detail-modal, 
+            #comparison-modal *, #detail-modal * {
+                visibility: visible;
+            }
+
+            /* Posicionar el modal como el único contenido de la página */
+            #comparison-modal, #detail-modal {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                background: white !important;
+                z-index: 9999;
+                border: none !important;
+                inset: auto !important; /* Reset inset */
+            }
+
+            /* Ocultar elementos de interfaz dentro del modal */
+            button, .no-print, #compare-tray, #toast {
+                display: none !important;
+            }
+
+            /* Mostrar el encabezado de impresión */
+            .print-header {
+                display: block !important;
+                visibility: visible !important;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #E60012;
+                padding-bottom: 10px;
+            }
+            .print-header * { visibility: visible !important; }
+
+            /* Estilos de Tabla para papel */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 10pt !important;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid #ccc !important;
+                padding: 8px !important;
+                color: black !important;
+                background-color: white !important;
+            }
+            th { background-color: #f0f0f0 !important; font-weight: bold; }
+            tr { page-break-inside: avoid; } /* Evitar cortar filas */
+            
+            /* Ajustes de imagen */
+            img { 
+                max-width: 150px !important; 
+                height: auto !important; 
+                display: block !important; 
+                margin: 0 auto;
+                visibility: visible !important;
+            }
+
+            /* Ajustes de texto */
+            .text-white, .text-gray-200, .text-gray-300, .text-gray-400 { 
+                color: black !important; 
+            }
+            .bg-lumix-red {
+                background-color: #E60012 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact;
+            }
+            
+            /* Layout del modal de detalle para impresión */
+            #detail-modal .flex-col { display: block !important; }
+            #detail-modal .md\:flex-row { display: block !important; }
+            #detail-modal .w-full, #detail-modal .md\:w-1\/3, #detail-modal .md\:w-2\/3 { 
+                width: 100% !important; 
+                margin-bottom: 15px !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-lumix-dark border-b border-gray-800 sticky top-0 z-40 backdrop-blur-md bg-opacity-90 no-print">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-6">
+                <!-- Logo Merlin (Con fondo blanco sutil para legibilidad en modo oscuro si el PNG tiene transparencia) -->
+                <div class="bg-white/10 p-1 rounded">
+                    <img src="https://www.merlindistributor.com/wp-content/uploads/2021/01/Merlin-Distributor-40-anos.png.webp" alt="Merlin Distributor" class="h-10 w-auto object-contain">
+                </div>
+                
+                <!-- Separador -->
+                <div class="h-8 w-px bg-gray-700 hidden sm:block"></div>
+
+                <!-- Logo Lumix -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" alt="LUMIX Logo" class="h-5 w-auto object-contain brightness-0 invert">
+                
+                <h1 class="text-lg font-light tracking-wide text-gray-400 hidden lg:block">Selector <span class="font-bold text-white">2025 (Beta)</span></h1>
+            </div>
+            
+            <!-- Live Search -->
+            <div class="flex-grow max-w-md w-full relative group">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i data-lucide="search" class="h-4 w-4 text-gray-500 group-focus-within:text-lumix-red transition"></i>
+                </div>
+                <input type="text" id="search-input" 
+                    class="bg-gray-800 border border-gray-700 text-gray-100 text-sm rounded-lg focus:ring-1 focus:ring-lumix-red focus:border-lumix-red block w-full pl-10 pr-10 p-2.5 placeholder-gray-500 transition" 
+                    placeholder="Buscar por modelo, 6K, Ojos, LUTs..."
+                    onkeyup="filterCameras()">
+                <button onclick="clearSearch()" id="clear-search-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-white hidden">
+                    <i data-lucide="x-circle" class="h-4 w-4"></i>
+                </button>
+            </div>
+            
+            <div class="flex gap-2 items-center">
+                <div class="bg-gray-800 p-1 rounded-lg flex border border-gray-700 mr-2">
+                    <button onclick="setView('grid')" id="btn-grid" class="p-2 rounded hover:bg-gray-700 text-lumix-red bg-gray-700 transition" title="Cuadrícula">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="setView('list')" id="btn-list" class="p-2 rounded hover:bg-gray-700 text-gray-400 transition" title="Lista">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <button onclick="resetFilters()" class="flex items-center gap-2 bg-lumix-red hover:bg-red-700 text-white px-4 py-2 rounded text-sm transition font-semibold" title="Reiniciar Filtros">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full flex flex-col lg:flex-row gap-8">
+        
+        <!-- Sidebar Filters -->
+        <aside class="w-full lg:w-72 flex-shrink-0 space-y-6 no-print">
+            
+            <!-- 1. Sensor -->
+            <div class="bg-lumix-gray p-5 rounded-lg border border-gray-700">
+                <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
+                    <i data-lucide="aperture" class="w-4 h-4 text-lumix-red"></i> Sensor
+                </h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-sensor w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="Full-Frame">
+                        <span class="text-gray-300 group-hover:text-white transition">Full-Frame</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-sensor w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="MFT">
+                        <span class="text-gray-300 group-hover:text-white transition">Micro 4/3</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 2. Calidad de Video -->
+            <div class="bg-lumix-gray p-5 rounded-lg border border-gray-700">
+                <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
+                    <i data-lucide="film" class="w-4 h-4 text-lumix-red"></i> Calidad Video
+                </h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="8k">
+                        <span class="text-gray-300 group-hover:text-white transition">8K Ultra High Res</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="6k">
+                        <span class="text-gray-300 group-hover:text-white transition">6K / Open Gate</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="4k">
+                        <span class="text-gray-300 group-hover:text-white transition">4K Pro</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 3. Tecnologías Clave -->
+            <div class="bg-gray-800 p-5 rounded-lg border border-lumix-red shadow-lg relative">
+                <div class="absolute top-0 right-0 bg-lumix-red text-white text-[10px] font-bold px-2 py-1 uppercase">Must Haves</div>
+                <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
+                    <i data-lucide="cpu" class="w-4 h-4 text-lumix-red"></i> Tecnologías
+                </h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="pdaf">
+                        <span class="text-gray-300 group-hover:text-white transition">Enfoque Ojos (PDAF)</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="ibis">
+                        <span class="text-gray-300 group-hover:text-white transition">Estabilización I.S.</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="luts">
+                        <span class="text-gray-300 group-hover:text-white transition">Color Pro (LUTs)</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="flip">
+                        <span class="text-gray-300 group-hover:text-white transition">Pantalla Articulada</span>
+                    </label>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1">
+            <div class="flex justify-between items-center mb-6 no-print">
+                <h2 class="text-2xl font-bold text-white"><span id="count-display">0</span> Modelos Disponibles</h2>
+                <div class="text-sm text-gray-500 hidden sm:block">
+                    Selecciona <span class="text-lumix-red font-bold">Comparar</span> para ver detalles
+                </div>
+            </div>
+
+            <div id="camera-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Content injected here -->
+            </div>
+            
+            <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 text-gray-500">
+                <i data-lucide="camera-off" class="w-16 h-16 mb-4"></i>
+                <p class="text-lg">No hay cámaras que coincidan con los filtros.</p>
+                <button onclick="resetFilters()" class="mt-4 text-lumix-red hover:underline">Reiniciar Filtros</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Comparison Tray -->
+    <div id="compare-tray" class="fixed bottom-0 left-0 right-0 bg-lumix-dark border-t border-gray-700 p-4 transform translate-y-full transition-transform duration-300 z-50 shadow-2xl no-print">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span class="text-gray-400 text-sm font-tech uppercase tracking-wide">Comparar (<span id="compare-count">0</span>/3)</span>
+                <div id="compare-thumbnails" class="flex gap-2"></div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="clearComparison()" class="text-gray-400 hover:text-white text-sm px-3">Cancelar</button>
+                <button onclick="openCompareModal()" class="bg-lumix-red hover:bg-red-700 text-white px-6 py-2 rounded font-bold shadow-lg transition">VER COMPARATIVA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div id="comparison-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex flex-col">
+        <div class="flex flex-col md:flex-row justify-between items-center p-6 border-b border-gray-800 bg-lumix-dark gap-4 no-print">
+            <h2 class="text-2xl font-bold text-white font-tech uppercase">Comparativa Técnica</h2>
+            <div class="flex gap-3">
+                <button onclick="exportToCSV()" class="flex items-center gap-2 bg-gray-800 hover:bg-green-700 hover:text-white text-gray-300 px-3 py-2 rounded text-xs transition border border-gray-600">
+                    <i data-lucide="sheet" class="w-4 h-4"></i> CSV
+                </button>
+                <button onclick="printComparison()" class="flex items-center gap-2 bg-gray-800 hover:bg-blue-600 hover:text-white text-gray-300 px-3 py-2 rounded text-xs transition border border-gray-600">
+                    <i data-lucide="printer" class="w-4 h-4"></i> Imprimir
+                </button>
+                <button onclick="closeCompareModal()" class="text-gray-400 hover:text-white ml-2"><i data-lucide="x" class="w-8 h-8"></i></button>
+            </div>
+        </div>
+        
+        <!-- Printable Header (Only Visible on Print) -->
+        <div class="hidden print-header p-4">
+            <div class="flex items-center gap-6 mb-4">
+                <!-- Logos para Impresión (Limpios) -->
+                <img src="https://www.merlindistributor.com/wp-content/uploads/2021/01/Merlin-Distributor-40-anos.png.webp" class="h-12 w-auto" style="filter: none; opacity: 1;">
+                <div class="h-8 w-px bg-gray-400"></div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" class="h-6 w-auto" style="filter: brightness(0);">
+            </div>
+            <h1 class="text-2xl font-bold text-black border-b border-gray-300 pb-2 mt-4">Comparativa Técnica 2025 (Beta)</h1>
+        </div>
+
+        <div class="flex-1 overflow-auto p-6">
+            <div id="comparison-content" class="min-w-max"></div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-700 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10 bg-gray-800 rounded-full p-1 no-print">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            
+            <!-- Printable Header for Detail (Only Visible on Print) -->
+            <div class="hidden print-header p-8 pb-0">
+                <div class="flex items-center gap-6 mb-4">
+                    <img src="https://www.merlindistributor.com/wp-content/uploads/2021/01/Merlin-Distributor-40-anos.png.webp" class="h-10 w-auto" style="filter: none;">
+                    <div class="h-8 w-px bg-gray-400"></div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" class="h-5" style="filter: brightness(0);">
+                </div>
+            </div>
+
+            <div id="modal-content" class="p-8"></div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-white text-black px-6 py-3 rounded shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 z-[60] no-print">Notificación</div>
+
+    <script>
+        // --- Database ---
+        const cameras = [
+            // --- SERIE S ---
+            {
+                id: "s1rii",
+                model: "LUMIX S1RII",
+                image: "https://static.bhphoto.com/images/images1000x1000/1740473206_1879621.jpg",
+                tagline: "El Nuevo Estándar en Alta Resolución.",
+                description: "Resolución masiva para fotógrafos comerciales y de paisaje que no comprometen el detalle.",
+                features: [
+                    "Sensor de fotograma completo de 44,3 megapíxeles",
+                    "Disparo en ráfaga AFS/AFC a 40 fps con obturador electrónico",
+                    "El primer vídeo 8.1K (17:9) / 8K (16:9) de LUMIX",
+                    "AF híbrido de fase con tecnología de IA avanzada",
+                    "La estabilización de imagen líder en su clase"
+                ],
+                sensorType: "Full-Frame",
+                sensorDetail: "BSI Full-Frame 44.3MP",
+                mount: "Montura L",
+                ibis: "IBIS 5 ejes (8.0 pasos)",
+                focus: "PDAF Híbrido + IA",
+                videoMax: "8K 30p / 4K 120p",
+                hdmi: "HDMI Tipo A (Full)",
+                openGate: "Sí, 6.4K Open Gate",
+                screen: "Triaxial Inclinable",
+                connectivity: "WiFi 5GHz / Bluetooth 5.0",
+                burst: "40 fps (Elec)",
+                codecs: "HEVC, AVC",
+                color: "V-Log 14+ pasos",
+                storage: "CFexpress B + SD UHS-II",
+                filters: ["pdaf", "8k", "6k", "4k", "luts", "ibis", "high_res"], 
+                price_tier: 3
+            },
+            {
+                id: "s1ii",
+                model: "LUMIX S1II",
+                image: "https://static.bhphoto.com/images/images500x500/1747129594_1892230.jpg",
+                tagline: "Velocidad y Hibridez Definitiva.",
+                description: "Potencia para flujos de trabajo de postproducción exigentes con sensor apilado.",
+                features: [
+                    "Sensor CMOS parcialmente apilado de 24,1 MP de nuevo desarrollo",
+                    "Disparo en ráfaga AFS/AFC a 70 fps con obturador electrónico",
+                    "Grabación de vídeo 6K 30p / 5.1K 60p a puerta abierta",
+                    "15 pasos V-Log/V-Gamut",
+                    "Reconocimiento de AF híbrido de fase y deportes urbanos"
+                ],
+                sensorType: "Full-Frame",
+                sensorDetail: "CMOS Parcialmente Apilado 24.1MP",
+                mount: "Montura L",
+                ibis: "IBIS 5 ejes (8.0 pasos)",
+                focus: "PDAF Híbrido + IA Deportes",
+                videoMax: "6K 30p Open Gate, 4K 60p",
+                hdmi: "HDMI Tipo A (Full)",
+                openGate: "Sí, 6K Open Gate",
+                screen: "Articulada (Free-Angle)",
+                connectivity: "WiFi 5GHz / Bluetooth 5.0",
+                burst: "70 fps (Elec)",
+                codecs: "ProRes RAW Int, ProRes 422",
+                color: "V-Log 15 pasos / LUTs",
+                storage: "CFexpress B + SD UHS-II",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip"],
+                price_tier: 3
+            },
+            {
+                id: "s1iie",
+                model: "LUMIX S1IIE",
+                image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s1m2esbody_lumix_s1iie_mirrorless_camera_1892232.jpg",
+                tagline: "Video Profesional Accesible.",
+                description: "Control sin concesiones heredado de la serie S1 en un paquete optimizado.",
+                features: [
+                    "Control sin concesiones heredado de la LUMIX S1RII y S1II",
+                    "Sensor CMOS BSI de 24,2 MP para detalles realistas y ricos",
+                    "Un monitor de inclinación y ángulo libre diseñado para trabajo creativo",
+                    "Grabación de vídeo 6K 30p 4:2:0 de 10 bits a puerta abierta",
+                    "Disparo en ráfaga AFS/AFC a 30 fps con obturador electrónico"
+                ],
+                sensorType: "Full-Frame",
+                sensorDetail: "BSI Full-Frame 24.2MP",
+                mount: "Montura L",
+                ibis: "IBIS 5 ejes (8.0 pasos)",
+                focus: "PDAF Híbrido + IA",
+                videoMax: "6K 30p Open Gate, 4K 60p",
+                hdmi: "HDMI Tipo A (Full)",
+                openGate: "Sí, 6K Open Gate",
+                screen: "Inclinable + Ángulo Libre",
+                connectivity: "WiFi 5GHz / Bluetooth 5.0",
+                burst: "30 fps (Elec)",
+                codecs: "HEVC, AVC",
+                color: "V-Log 14+ / LUTs",
+                storage: "Doble SD UHS-II",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip"],
+                price_tier: 2
+            },
+            {
+                id: "s5iix",
+                model: "LUMIX S5IIX",
+                image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s5miix_ff_mirrorless_camera_1743629.jpg",
+                tagline: "Flujo de Trabajo Turbo-Cargado.",
+                description: "Diseño 'Black' mate sigiloso con capacidades de streaming y grabación directa a SSD.",
+                features: [
+                    "Sensor CMOS de fotograma completo de 24,2 MP",
+                    "Grabación ilimitada de vídeo 6k30p y C4K/4K 60p 4:2:2 10-bit",
+                    "Grabación a SSD vía USB y salida RAW por HDMI",
+                    "Sistema AF de detección de fase de 779 puntos",
+                    "Disparo continuo 30 fps, ISO 51200, Streaming Wi-Fi/Ethernet"
+                ],
+                sensorType: "Full-Frame",
+                sensorDetail: "Full-Frame 24.2MP",
+                mount: "Montura L",
+                ibis: "Active I.S. (6.5 pasos)",
+                focus: "PDAF Híbrido (779 puntos)",
+                videoMax: "6K 30p Open Gate, C4K 60p",
+                hdmi: "HDMI Tipo A (Full)",
+                openGate: "Sí, 6K Open Gate",
+                screen: "Articulada (Free-Angle)",
+                connectivity: "WiFi / BT / LAN (USB)",
+                burst: "30 fps (E-Shutter)",
+                codecs: "ProRes 422 HQ, All-Intra",
+                color: "V-Log 14+ / Real Time LUT",
+                storage: "Doble SD UHS-II (SSD USB)",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd"],
+                price_tier: 2
+            },
+            {
+                id: "s5ii",
+                model: "LUMIX S5II",
+                image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s5m2body_lumix_s5_ii_mirrorless_1742428.jpg",
+                tagline: "El Punto Óptimo Híbrido.",
+                description: "Introduce el PDAF y la calidad de imagen 6K V-Log en el cuerpo más equilibrado.",
+                features: [
+                    "Sensor CMOS de fotograma completo de 24,2 MP",
+                    "Sistema AF de detección de fase de 779 puntos",
+                    "Active I.S. para caminar y grabar",
+                    "Grabación de vídeo 6K 30p Open Gate y 4K 60p ilimitado (Fan)",
+                    "LUTs en tiempo real para gradación de color en cámara"
+                ],
+                sensorType: "Full-Frame",
+                sensorDetail: "Full-Frame 24.2MP",
+                mount: "Montura L",
+                ibis: "Active I.S. (6.5 pasos)",
+                focus: "PDAF Híbrido (779 puntos)",
+                videoMax: "6K 30p Open Gate, 4K 60p",
+                hdmi: "HDMI Tipo A (Full)",
+                openGate: "Sí, 6K Open Gate",
+                screen: "Articulada (Free-Angle)",
+                connectivity: "WiFi 5GHz / Bluetooth 5.0",
+                burst: "30 fps (E-Shutter)",
+                codecs: "HEVC, AVC",
+                color: "V-Log 14+ / Real Time LUT",
+                storage: "Doble SD UHS-II",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip"],
+                price_tier: 2
+            },
+            {
+                id: "s9",
+                model: "LUMIX S9",
+                image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s9bodyk_lumix_s9_mirrorless_camera_1828733.jpg",
+                tagline: "Full-Frame Compacta para Redes.",
+                description: "Calidad FF con 6K Open Gate y flujo de trabajo instantáneo para redes sociales.",
+                features: [
+                    "Alta calidad de imagen con sensor de fotograma completo de 24,2 MP",
+                    "Marco flexible (Open Gate) para recortes verticales",
+                    "Ajustes preestablecidos de firma (LUTs) con botón dedicado",
+                    "Vídeo 6K MP4 Lite para transferencia rápida a smartphone",
+                    "Enfoque automático rápido y disparo estable"
+                ],
+                sensorType: "Full-Frame",
+                sensorDetail: "Full-Frame 24.2MP",
+                mount: "Montura L",
+                ibis: "Active I.S. + E-Stab (5.0 pasos)",
+                focus: "PDAF Híbrido",
+                videoMax: "6K 30p Open Gate (MP4 Lite)",
+                hdmi: "HDMI Tipo D (Micro)",
+                openGate: "Sí, 6K Open Gate",
+                screen: "Articulada (Free-Angle)",
+                connectivity: "WiFi 5GHz / Bluetooth",
+                burst: "30 fps",
+                codecs: "HEVC, AVC (MP4 Lite)",
+                color: "V-Log / Real Time LUT Button",
+                storage: "1x SD UHS-II",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "vlog"],
+                price_tier: 1
+            },
+            // --- SERIE G ---
+            {
+                id: "gh7",
+                model: "LUMIX GH7",
+                image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_gh7body_lumix_gh7_mirrorless_camera_1832646.jpg",
+                tagline: "Potencia de Producción MFT.",
+                description: "La bestia MFT para cineastas con grabación interna ProRes RAW y Audio 32-bit float.",
+                features: [
+                    "Grabación interna de Apple ProRes RAW",
+                    "Primera grabación de audio flotante de 32 bits del mundo (sin necesidad de ajustar ganancia)",
+                    "Compatibilidad nativa con Adobe Frame.io Camera to Cloud",
+                    "Sensor de 25,5 MP y rango dinámico de 13+ pasos",
+                    "LUT en tiempo real para aplicar nuevas expresiones de color"
+                ],
+                sensorType: "MFT",
+                sensorDetail: "BSI Live MOS 25.2MP",
+                mount: "Micro 4/3",
+                ibis: "IBIS 5 ejes (7.5 pasos)",
+                focus: "PDAF Híbrido",
+                videoMax: "5.7K 60p, 4K 120p",
+                hdmi: "HDMI Tipo A (Full)",
+                openGate: "Sí, 5.8K Open Gate",
+                screen: "Articulada (Free-Angle)",
+                connectivity: "WiFi / BT / Frame.io Cloud",
+                burst: "75 fps (E-Shutter)",
+                codecs: "ProRes RAW HQ, ProRes 422",
+                color: "V-Log 13+ / Real Time LUT",
+                storage: "CFexpress B + SD UHS-II",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd"],
+                price_tier: 3
+            },
+            {
+                id: "g97",
+                model: "LUMIX G97",
+                image: "https://static.bhphoto.com/images/images1500x1500/1734378342_1869315.jpg",
+                tagline: "Equilibrio Foto y Video MFT.",
+                description: "Cuerpo tipo DSLR robusto para creadores híbridos.",
+                features: [
+                    "Sensor CMOS de 20,3 MP sin filtro de paso bajo",
+                    "5.0 pasos 5 ejes Dual I.S. 2 para tomas nítidas a mano",
+                    "Grabación de video 4K 30p sin límite de tiempo",
+                    "V-Log L preinstalado para gradación de color",
+                    "OLED LVF de alta resolución y monitor de ángulo libre"
+                ],
+                sensorType: "MFT",
+                sensorDetail: "MFT 20.3MP",
+                mount: "Micro 4/3",
+                ibis: "IBIS 5 ejes (5.0 pasos)",
+                focus: "DFD (Contraste)",
+                videoMax: "4K 60p, FHD 180p",
+                hdmi: "HDMI Tipo D (Micro)",
+                openGate: "No",
+                screen: "Articulada (Free-Angle)",
+                connectivity: "WiFi / Bluetooth 4.2",
+                burst: "9 fps / 4K Photo",
+                codecs: "HEVC, AVC",
+                color: "V-Log L 12 pasos",
+                storage: "Doble SD UHS-II",
+                filters: ["4k", "luts", "ibis", "flip"],
+                price_tier: 1
+            },
+            {
+                id: "g100d",
+                model: "LUMIX G100D",
+                image: "https://static.bhphoto.com/images/images1000x1000/1704725720_1804791.jpg",
+                tagline: "Vlogging Ultra-Portátil.",
+                description: "La cámara ideal para saltar del smartphone a la calidad mirrorless.",
+                features: [
+                    "Sensor de 20.3 MP optimizado para vlogging",
+                    "Audio OZO de Nokia con seguimiento facial (sin micro externo)",
+                    "Pantalla articulada brillante ideal para selfies",
+                    "Grabación 4K 30p y modo Video Selfie",
+                    "Conectividad fácil con smartphone para subir a redes"
+                ],
+                sensorType: "MFT",
+                sensorDetail: "MFT 20.3MP",
+                mount: "Micro 4/3",
+                ibis: "Hybrid I.S. (5 ejes)",
+                focus: "DFD (Contraste) con Eye AF",
+                videoMax: "4K 30p, FHD 60p",
+                hdmi: "HDMI Tipo D (Micro)",
+                openGate: "No",
+                screen: "Articulada (Selfie)",
+                connectivity: "WiFi / Bluetooth",
+                burst: "10 fps / 4K Photo",
+                codecs: "MP4",
+                color: "V-Log L",
+                storage: "1x SD UHS-I",
+                filters: ["4k", "luts", "ibis", "flip", "vlog"],
+                price_tier: 1
+            }
+        ];
+
+        // --- State Management ---
+        let selectedComparison = [];
+        let viewMode = 'grid';
+
+        // --- DOM Elements ---
+        const container = document.getElementById('camera-container');
+        const emptyState = document.getElementById('empty-state');
+        const countDisplay = document.getElementById('count-display');
+        const inputs = document.querySelectorAll('input[type="checkbox"]');
+        const searchInput = document.getElementById('search-input');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+        const compareTray = document.getElementById('compare-tray');
+        const compareCount = document.getElementById('compare-count');
+        const compareThumbnails = document.getElementById('compare-thumbnails');
+        const btnGrid = document.getElementById('btn-grid');
+        const btnList = document.getElementById('btn-list');
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCameras(cameras);
+            lucide.createIcons();
+            inputs.forEach(input => input.addEventListener('change', filterCameras));
+        });
+
+        // --- View Switching ---
+        function setView(mode) {
+            viewMode = mode;
+            if(mode === 'grid') {
+                btnGrid.classList.replace('text-gray-400', 'text-lumix-red'); btnGrid.classList.add('bg-gray-700');
+                btnList.classList.replace('text-lumix-red', 'text-gray-400'); btnList.classList.remove('bg-gray-700');
+                container.className = "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6";
+            } else {
+                btnList.classList.replace('text-gray-400', 'text-lumix-red'); btnList.classList.add('bg-gray-700');
+                btnGrid.classList.replace('text-lumix-red', 'text-gray-400'); btnGrid.classList.remove('bg-gray-700');
+                container.className = "flex flex-col gap-3";
+            }
+            filterCameras();
+        }
+
+        // --- Filter & Search Logic ---
+        function filterCameras() {
+            const sensorFilters = Array.from(document.querySelectorAll('.filter-sensor:checked')).map(cb => cb.value);
+            const featFilters = Array.from(document.querySelectorAll('.filter-feat:checked')).map(cb => cb.value);
+            const searchText = searchInput.value.toLowerCase();
+            
+            clearSearchBtn.classList.toggle('hidden', searchText.length === 0);
+
+            const filtered = cameras.filter(cam => {
+                const sensorMatch = sensorFilters.length === 0 || sensorFilters.includes(cam.sensorType === "Full-Frame" ? "Full-Frame" : "MFT");
+                const featMatch = featFilters.length === 0 || featFilters.every(f => cam.filters.includes(f));
+                
+                const searchMatch = searchText === "" || 
+                                    cam.model.toLowerCase().includes(searchText) ||
+                                    cam.sensorDetail.toLowerCase().includes(searchText) ||
+                                    cam.filters.join(" ").includes(searchText);
+
+                return sensorMatch && featMatch && searchMatch;
+            });
+
+            renderCameras(filtered);
+        }
+
+        function clearSearch() { searchInput.value = ''; filterCameras(); searchInput.focus(); }
+
+        function renderCameras(list) {
+            container.innerHTML = '';
+            countDisplay.innerText = list.length;
+
+            if (list.length === 0) {
+                container.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            list.forEach(cam => {
+                const isSelected = selectedComparison.includes(cam.id);
+                const badgeColor = cam.sensorType === 'Full-Frame' ? 'bg-lumix-red' : 'bg-blue-600';
+                
+                // Generar Badges dinámicos
+                let specialBadges = '';
+                if(cam.filters.includes('pdaf')) specialBadges += `<span class="bg-gray-700 text-white text-[9px] px-1 rounded border border-gray-600">Eye AF</span>`;
+                // Nuevo Badge Open Gate
+                if(cam.openGate && (cam.openGate.includes("Sí") || cam.filters.includes('6k'))) {
+                    specialBadges += `<span class="bg-indigo-600 text-white text-[9px] px-1 rounded border border-indigo-500">Open Gate</span>`;
+                }
+
+                let html = '';
+
+                if (viewMode === 'grid') {
+                    html = `
+                    <div class="lumix-card bg-gray-800 rounded-lg overflow-hidden flex flex-col relative ${isSelected ? 'border-lumix-red ring-1 ring-lumix-red' : ''}">
+                        <div class="absolute top-0 right-0 p-2 z-10">
+                            <label class="flex items-center gap-2 bg-black/50 backdrop-blur px-2 py-1 rounded cursor-pointer hover:bg-black/80 transition select-none">
+                                <span class="text-xs font-bold text-gray-300">COMPARAR</span>
+                                <input type="checkbox" class="lumix-checkbox rounded text-lumix-red focus:ring-0" 
+                                    onclick="toggleCompare('${cam.id}', this)" ${isSelected ? 'checked' : ''}>
+                            </label>
+                        </div>
+                        <div class="h-48 bg-white flex items-center justify-center relative p-4 group overflow-hidden">
+                            <img src="${cam.image}" alt="${cam.model}" class="w-full h-full object-contain transition duration-300 group-hover:scale-105">
+                            <div class="absolute bottom-2 left-2 flex flex-wrap gap-1 items-center">
+                                <span class="${badgeColor} text-white text-xs font-bold px-2 py-1 rounded shadow-lg">${cam.sensorType}</span>
+                                <div class="flex gap-1 flex-wrap">${specialBadges}</div>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col">
+                            <div class="mb-4">
+                                <h3 class="text-xl font-bold text-white mb-1">${cam.model}</h3>
+                                <p class="text-gray-400 text-xs italic line-clamp-2 min-h-[2.5em]">${cam.tagline}</p>
+                            </div>
+                            <div class="space-y-2 mb-6 flex-grow">
+                                <div class="flex items-center gap-2 text-sm text-gray-300">
+                                    <i data-lucide="film" class="w-4 h-4 text-lumix-red"></i> <span>${cam.videoMax}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-300">
+                                    <i data-lucide="scan-face" class="w-4 h-4 text-lumix-red"></i> <span>${cam.focus}</span>
+                                </div>
+                                 <div class="flex items-center gap-2 text-sm text-gray-300">
+                                    <i data-lucide="activity" class="w-4 h-4 text-lumix-red"></i> <span>${cam.ibis}</span>
+                                </div>
+                            </div>
+                            <button onclick="openModal('${cam.id}')" class="w-full bg-transparent border border-gray-600 hover:border-white hover:text-white text-gray-300 py-2 rounded text-sm font-semibold transition flex items-center justify-center gap-2">
+                                <i data-lucide="info" class="w-4 h-4"></i> Ver Detalles
+                            </button>
+                        </div>
+                    </div>`;
+                } else {
+                    html = `
+                    <div class="bg-gray-800 rounded-lg p-3 flex flex-col sm:flex-row gap-4 items-center border border-gray-700 hover:border-gray-500 transition ${isSelected ? 'border-lumix-red ring-1 ring-lumix-red' : ''}">
+                        <div class="w-full sm:w-24 h-20 bg-white rounded flex-shrink-0 flex items-center justify-center p-1 relative">
+                             <img src="${cam.image}" class="w-full h-full object-contain">
+                             <span class="${badgeColor} text-white text-[10px] font-bold px-1 rounded absolute bottom-0 left-0">${cam.sensorType}</span>
+                        </div>
+                        <div class="flex-grow text-center sm:text-left">
+                            <h3 class="text-lg font-bold text-white flex items-center justify-center sm:justify-start gap-2">${cam.model} <div class="flex gap-1">${specialBadges}</div></h3>
+                            <div class="text-xs text-gray-400 mt-1 grid grid-cols-2 sm:flex sm:gap-4">
+                                <span class="flex items-center gap-1 justify-center sm:justify-start"><i data-lucide="film" class="w-3 h-3 text-lumix-red"></i> ${cam.videoMax}</span>
+                                <span class="flex items-center gap-1 justify-center sm:justify-start"><i data-lucide="scan-face" class="w-3 h-3 text-lumix-red"></i> ${cam.focus}</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-row sm:flex-col gap-2 w-full sm:w-auto">
+                             <button onclick="openModal('${cam.id}')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white text-xs px-3 py-2 rounded transition">Detalles</button>
+                             <label class="flex-1 bg-black/30 hover:bg-black/50 text-gray-300 text-xs px-3 py-2 rounded cursor-pointer flex items-center justify-center gap-2 transition select-none">
+                                <input type="checkbox" class="rounded text-lumix-red focus:ring-0" 
+                                    onclick="toggleCompare('${cam.id}', this)" ${isSelected ? 'checked' : ''}> Comparar
+                            </label>
+                        </div>
+                    </div>`;
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = viewMode === 'list' ? 'w-full' : '';
+                wrapper.innerHTML = html;
+                container.appendChild(wrapper.firstElementChild);
+            });
+            lucide.createIcons();
+        }
+
+        // --- Comparison & Modal Logic ---
+
+        function toggleCompare(id, checkbox) {
+            if (checkbox.checked) {
+                if (selectedComparison.length >= 3) {
+                    showToast('Máximo 3 cámaras para comparar');
+                    checkbox.checked = false;
+                    return;
+                }
+                selectedComparison.push(id);
+            } else {
+                selectedComparison = selectedComparison.filter(item => item !== id);
+            }
+            updateCompareUI();
+        }
+
+        function updateCompareUI() {
+            filterCameras();
+            compareCount.innerText = selectedComparison.length;
+            compareThumbnails.innerHTML = '';
+            selectedComparison.forEach(id => {
+                const cam = cameras.find(c => c.id === id);
+                const thumb = document.createElement('div');
+                thumb.className = "bg-gray-700 px-2 py-1 rounded text-xs text-white border border-gray-500 flex items-center gap-2";
+                thumb.innerHTML = `${cam.model} <button onclick="toggleCompare('${id}', {checked:false})" class="hover:text-red-400"><i data-lucide="x" class="w-3 h-3"></i></button>`;
+                compareThumbnails.appendChild(thumb);
+            });
+            compareTray.classList.toggle('translate-y-full', selectedComparison.length === 0);
+            lucide.createIcons();
+        }
+
+        function clearComparison() { selectedComparison = []; updateCompareUI(); }
+
+        function openCompareModal() {
+            const modal = document.getElementById('comparison-modal');
+            const content = document.getElementById('comparison-content');
+            document.body.classList.add('modal-open');
+            const selectedCams = cameras.filter(c => selectedComparison.includes(c.id));
+            
+            let html = `
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="p-4 bg-gray-800 text-gray-400 border-b border-gray-700 sticky left-0 z-10 w-48">Especificación</th>
+                            ${selectedCams.map(c => `
+                                <th class="p-4 bg-gray-800 text-white border-b border-gray-700 min-w-[200px]">
+                                    <div class="h-24 bg-white rounded mb-2 flex items-center justify-center p-2 border border-gray-700">
+                                        <img src="${c.image}" class="h-full w-full object-contain">
+                                    </div>
+                                    <div class="text-xl font-bold">${c.model}</div>
+                                </th>
+                            `).join('')}
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        ${generateRow('Sensor', selectedCams, 'sensorDetail')}
+                        ${generateRow('Video Max', selectedCams, 'videoMax')}
+                        ${generateRow('Enfoque (AF)', selectedCams, 'focus')}
+                        ${generateRow('Estabilización', selectedCams, 'ibis')}
+                        ${generateRow('Pantalla', selectedCams, 'screen')}
+                        ${generateRow('Conectividad', selectedCams, 'connectivity')}
+                        ${generateRow('Ráfaga / Foto', selectedCams, 'burst')}
+                        ${generateRow('Color / LUTs', selectedCams, 'color')}
+                        ${generateRow('HDMI / OpenGate', selectedCams, 'hdmi')}
+                        ${generateRow('Almacenamiento', selectedCams, 'storage')}
+                    </tbody>
+                </table>`;
+            content.innerHTML = html;
+            modal.classList.remove('hidden');
+        }
+
+        function generateRow(label, cams, key) {
+            return `<tr class="hover:bg-gray-800/50 transition">
+                <td class="p-4 border-b border-gray-800 font-bold text-gray-400 sticky left-0 bg-lumix-dark">${label}</td>
+                ${cams.map(c => `<td class="p-4 border-b border-gray-800 text-gray-200 align-top">${c[key] || '-'}</td>`).join('')}
+            </tr>`;
+        }
+
+        function closeCompareModal() { document.getElementById('comparison-modal').classList.add('hidden'); document.body.classList.remove('modal-open'); }
+        
+        function openModal(id) {
+            const cam = cameras.find(c => c.id === id);
+            const modal = document.getElementById('detail-modal');
+            const content = document.getElementById('modal-content');
+            document.body.classList.add('modal-open');
+
+            // Renderizar la lista de características
+            let featuresHtml = '';
+            if (cam.features && cam.features.length > 0) {
+                featuresHtml = `
+                    <div class="mb-6 bg-gray-800/50 p-4 rounded border border-gray-700">
+                        <h4 class="text-lumix-red font-bold uppercase text-xs tracking-wider mb-2 flex items-center gap-2">
+                            <i data-lucide="star" class="w-3 h-3"></i> Puntos Clave
+                        </h4>
+                        <ul class="text-gray-200 text-sm space-y-1 list-disc list-inside features-list">
+                            ${cam.features.map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = `
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="w-full md:w-1/3">
+                        <div class="bg-white rounded-lg aspect-square flex items-center justify-center mb-4 p-4 border border-gray-700">
+                             <img src="${cam.image}" class="w-full h-full object-contain">
+                        </div>
+                        <h2 class="text-3xl font-bold text-white mb-2">${cam.model}</h2>
+                        <span class="bg-lumix-red text-white text-sm font-bold px-3 py-1 rounded inline-block mb-4">${cam.sensorType}</span>
+                    </div>
+                    <div class="w-full md:w-2/3 space-y-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Resumen</h3>
+                            <p class="text-gray-300 italic border-l-4 border-lumix-red pl-4 mb-4">${cam.description}</p>
+                            ${featuresHtml}
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            ${specBox('Sensor', cam.sensorDetail)}
+                            ${specBox('Video', cam.videoMax)}
+                            ${specBox('Enfoque (AF)', cam.focus)}
+                            ${specBox('Estabilización', cam.ibis)}
+                            ${specBox('Pantalla', cam.screen)}
+                            ${specBox('Conectividad', cam.connectivity)}
+                            ${specBox('Color / LUTs', cam.color)}
+                            ${specBox('Slots', cam.storage)}
+                        </div>
+                        <div class="pt-4 border-t border-gray-700 flex gap-3 no-print">
+                             <button onclick="toggleCompare('${cam.id}', {checked:true}); closeModal();" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 rounded font-bold transition">Comparar</button>
+                             <button class="flex-1 bg-lumix-red hover:bg-red-700 text-white py-3 rounded font-bold transition">Contactar</button>
+                        </div>
+                    </div>
+                </div>`;
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function specBox(label, value) {
+            return `<div class="bg-gray-800 p-4 rounded border border-gray-700"><span class="text-xs text-gray-400 uppercase block mb-1">${label}</span><span class="text-white font-medium text-sm">${value}</span></div>`;
+        }
+
+        function closeModal() { document.getElementById('detail-modal').classList.add('hidden'); document.body.classList.remove('modal-open'); }
+        
+        function printComparison() { window.print(); }
+        function exportToCSV() {
+            const selectedCams = cameras.filter(c => selectedComparison.includes(c.id));
+            if(selectedCams.length === 0) return;
+            let csv = "data:text/csv;charset=utf-8,\uFEFFEspecificación," + selectedCams.map(c => `"${c.model}"`).join(",") + "\r\n";
+            const keys = [
+                { id: 'sensorDetail', l: 'Sensor' }, { id: 'videoMax', l: 'Video' }, { id: 'focus', l: 'Enfoque' }, 
+                { id: 'ibis', l: 'Estabilización' }, { id: 'screen', l: 'Pantalla' }, { id: 'connectivity', l: 'Conectividad' }
+            ];
+            keys.forEach(k => { csv += `"${k.l}",` + selectedCams.map(c => `"${c[k.id]}"`).join(",") + "\r\n"; });
+            const link = document.createElement("a"); link.href = encodeURI(csv); link.download = "lumix_comparativa.csv"; link.click();
+        }
+
+        function resetFilters() { inputs.forEach(i => i.checked = false); searchInput.value = ''; selectedComparison = []; updateCompareUI(); filterCameras(); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0', 'translate-y-20'); setTimeout(() => t.classList.add('opacity-0', 'translate-y-20'), 3000); }
+    </script>
+</body>
+</html>

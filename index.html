@@ -64,119 +64,105 @@
             border-color: #E60012;
         }
 
-        /* --- SOLUCIÓN DEFINITIVA DE IMPRESIÓN (v13) --- */
+        /* --- MOTOR DE IMPRESIÓN REESCRITO (v20) --- */
         @media print {
             @page { 
-                margin: 0.5cm; 
+                margin: 1cm; 
                 size: landscape; 
             }
             
-            /* Ocultar TODO el sitio por defecto */
-            body * {
-                visibility: hidden;
+            /* 1. Ocultar TODO lo que no sea esencial */
+            header, aside, #compare-tray, #toast, #search-input, .group, .flex.gap-2, #btn-grid, #btn-list, .print-hidden, button { 
+                display: none !important; 
             }
 
-            /* Resetear el body para que sea un lienzo blanco */
-            body {
-                background-color: white !important;
-                color: black !important;
-                position: static !important;
-                overflow: visible !important;
-                height: auto !important;
+            /* 2. Resetear el contenedor principal */
+            body { 
+                background-color: white !important; 
+                color: black !important; 
+                font-family: sans-serif;
                 margin: 0 !important;
                 padding: 0 !important;
+                overflow: visible !important;
             }
 
-            /* Hacer visible SOLO el contenido del modal abierto y sus hijos */
-            #comparison-modal, #detail-modal, 
-            #comparison-modal *, #detail-modal * {
-                visibility: visible;
+            main {
+                display: none !important; /* Ocultar el grid principal */
             }
 
-            /* Posicionar el modal como el único contenido de la página */
-            #comparison-modal, #detail-modal {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
+            /* 3. Forzar visualización de los Modales ACTIVOS */
+            /* Usamos una clase específica en el body para saber si estamos en modo modal */
+            body.modal-open #comparison-modal, 
+            body.modal-open #detail-modal {
+                display: block !important;
+                position: static !important; /* CRUCIAL: Static permite que fluya en varias páginas */
                 width: 100% !important;
                 height: auto !important;
+                background: white !important;
+                border: none !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                display: block !important;
-                background: white !important;
-                z-index: 9999;
-                border: none !important;
-                inset: auto !important; /* Reset inset */
+                overflow: visible !important;
+                z-index: 1000;
             }
 
-            /* Ocultar elementos de interfaz dentro del modal */
-            button, .no-print, #compare-tray, #toast {
-                display: none !important;
-            }
+            /* Ocultar modales cerrados */
+            .hidden { display: none !important; }
 
-            /* Mostrar el encabezado de impresión */
-            .print-header {
-                display: block !important;
-                visibility: visible !important;
-                margin-bottom: 20px;
-                border-bottom: 2px solid #E60012;
-                padding-bottom: 10px;
-            }
-            .print-header * { visibility: visible !important; }
-
-            /* Estilos de Tabla para papel */
+            /* 4. Estilos de la Tabla para Impresión */
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                font-size: 10pt !important;
-                margin-top: 20px;
+                font-size: 9pt !important;
+                page-break-inside: auto;
             }
-            th, td {
-                border: 1px solid #ccc !important;
-                padding: 8px !important;
-                color: black !important;
-                background-color: white !important;
-            }
-            th { background-color: #f0f0f0 !important; font-weight: bold; }
-            tr { page-break-inside: avoid; } /* Evitar cortar filas */
             
-            /* Ajustes de imagen */
-            img { 
-                max-width: 150px !important; 
-                height: auto !important; 
-                display: block !important; 
-                margin: 0 auto;
-                visibility: visible !important;
+            thead { display: table-header-group; } /* Repetir encabezados en cada página */
+            tr { page-break-inside: avoid; page-break-after: auto; } /* Intentar no cortar filas */
+            
+            th, td {
+                border: 1px solid #ddd !important;
+                padding: 6px !important;
+                color: black !important;
+                text-align: left;
+                vertical-align: top;
+            }
+            th { background-color: #f3f3f3 !important; font-weight: bold; }
+
+            /* 5. Header de Impresión (Logos) */
+            .print-header {
+                display: flex !important;
+                align-items: center;
+                gap: 20px;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #E60012;
+            }
+            .print-header img {
+                height: 40px !important;
+                width: auto !important;
+                filter: none !important; /* Asegurar colores originales */
+                opacity: 1 !important;
             }
 
-            /* Ajustes de texto */
-            .text-white, .text-gray-200, .text-gray-300, .text-gray-400 { 
-                color: black !important; 
-            }
-            .bg-lumix-red {
-                background-color: #E60012 !important;
-                color: white !important;
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact;
-            }
+            /* 6. Correcciones de Texto */
+            .text-white, .text-gray-200, .text-gray-300, .text-gray-400 { color: black !important; }
+            .bg-lumix-red { background-color: #E60012 !important; color: white !important; -webkit-print-color-adjust: exact; }
             
-            /* Layout del modal de detalle para impresión */
+            /* Correcciones para el modal de detalle */
             #detail-modal .flex-col { display: block !important; }
-            #detail-modal .md\:flex-row { display: block !important; }
-            #detail-modal .w-full, #detail-modal .md\:w-1\/3, #detail-modal .md\:w-2\/3 { 
-                width: 100% !important; 
-                margin-bottom: 15px !important;
-            }
+            #detail-modal .w-full, #detail-modal .md\:w-1\/3, #detail-modal .md\:w-2\/3 { width: 100% !important; display: block !important; margin-bottom: 15px; }
+            #detail-modal img { max-width: 200px !important; margin: 0 auto; display: block; }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
     <!-- Header -->
-    <header class="bg-lumix-dark border-b border-gray-800 sticky top-0 z-40 backdrop-blur-md bg-opacity-90 no-print">
+    <header class="bg-lumix-dark border-b border-gray-800 sticky top-0 z-40 backdrop-blur-md bg-opacity-90">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-6">
-                <!-- Logo Merlin (Con fondo blanco sutil para legibilidad en modo oscuro si el PNG tiene transparencia) -->
+                <!-- Logo Merlin -->
                 <div class="bg-white/10 p-1 rounded">
                     <img src="https://www.merlindistributor.com/wp-content/uploads/2021/01/Merlin-Distributor-40-anos.png.webp" alt="Merlin Distributor" class="h-10 w-auto object-contain">
                 </div>
@@ -223,26 +209,48 @@
     <main class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full flex flex-col lg:flex-row gap-8">
         
         <!-- Sidebar Filters -->
-        <aside class="w-full lg:w-72 flex-shrink-0 space-y-6 no-print">
+        <aside class="w-full lg:w-72 flex-shrink-0 space-y-6">
             
-            <!-- 1. Sensor -->
+            <!-- FILTRO 3: ECOSISTEMA -->
             <div class="bg-lumix-gray p-5 rounded-lg border border-gray-700">
                 <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
-                    <i data-lucide="aperture" class="w-4 h-4 text-lumix-red"></i> Sensor
+                    <i data-lucide="aperture" class="w-4 h-4 text-lumix-red"></i> Ecosistema
                 </h3>
                 <div class="space-y-3">
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" class="filter-sensor w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="Full-Frame">
-                        <span class="text-gray-300 group-hover:text-white transition">Full-Frame</span>
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Montura L (Full-Frame)</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" class="filter-sensor w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="MFT">
-                        <span class="text-gray-300 group-hover:text-white transition">Micro 4/3</span>
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Micro 4/3 (MFT)</span>
                     </label>
                 </div>
             </div>
 
-            <!-- 2. Calidad de Video -->
+            <!-- FILTRO 2: PRESTACIONES CRÍTICAS (Deal-Breakers) -->
+            <div class="bg-gray-800 p-5 rounded-lg border border-lumix-red shadow-lg relative">
+                <div class="absolute top-0 right-0 bg-lumix-red text-white text-[9px] font-bold px-2 py-1 uppercase">Pro Features</div>
+                <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
+                    <i data-lucide="alert-circle" class="w-4 h-4 text-lumix-red"></i> Prestaciones Críticas
+                </h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer group" title="Grabación sin límite de tiempo (sin corte a 30min)">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="unlimited">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Grabación Ilimitada</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group" title="Doble ranura de tarjeta (SD o CFexpress)">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="dual_slot">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Doble Ranura</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group" title="Grabación RAW externa o interna / SSD">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="raw_out">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Salida RAW / SSD</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Calidad de Video -->
             <div class="bg-lumix-gray p-5 rounded-lg border border-gray-700">
                 <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
                     <i data-lucide="film" class="w-4 h-4 text-lumix-red"></i> Calidad Video
@@ -250,41 +258,48 @@
                 <div class="space-y-3">
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="8k">
-                        <span class="text-gray-300 group-hover:text-white transition">8K Ultra High Res</span>
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">8K Ultra High Res</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="6k">
-                        <span class="text-gray-300 group-hover:text-white transition">6K / Open Gate</span>
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">6K / Open Gate</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="4k">
-                        <span class="text-gray-300 group-hover:text-white transition">4K Pro</span>
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">4K Profesional</span>
                     </label>
                 </div>
             </div>
 
-            <!-- 3. Tecnologías Clave -->
-            <div class="bg-gray-800 p-5 rounded-lg border border-lumix-red shadow-lg relative">
-                <div class="absolute top-0 right-0 bg-lumix-red text-white text-[10px] font-bold px-2 py-1 uppercase">Must Haves</div>
+            <!-- Tecnologías (Ventilador Agregado Aquí) -->
+            <div class="bg-lumix-gray p-5 rounded-lg border border-gray-700">
                 <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
                     <i data-lucide="cpu" class="w-4 h-4 text-lumix-red"></i> Tecnologías
                 </h3>
                 <div class="space-y-3">
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="pdaf">
-                        <span class="text-gray-300 group-hover:text-white transition">Enfoque Ojos (PDAF)</span>
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="pdaf">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Enfoque Ojos (PDAF)</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="ibis">
-                        <span class="text-gray-300 group-hover:text-white transition">Estabilización I.S.</span>
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="streaming">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Live Streaming</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="luts">
-                        <span class="text-gray-300 group-hover:text-white transition">Color Pro (LUTs)</span>
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="real_time_lut">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">LUT en Tiempo Real</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="flip">
-                        <span class="text-gray-300 group-hover:text-white transition">Pantalla Articulada</span>
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="prores_raw">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">ProRes RAW</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group" title="Sistema de ventilación activo">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="fan">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Ventilador Activo</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="flip">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Pantalla Articulada</span>
                     </label>
                 </div>
             </div>
@@ -313,7 +328,7 @@
     </main>
 
     <!-- Comparison Tray -->
-    <div id="compare-tray" class="fixed bottom-0 left-0 right-0 bg-lumix-dark border-t border-gray-700 p-4 transform translate-y-full transition-transform duration-300 z-50 shadow-2xl no-print">
+    <div id="compare-tray" class="fixed bottom-0 left-0 right-0 bg-lumix-dark border-t border-gray-700 p-4 transform translate-y-full transition-transform duration-300 z-50 shadow-2xl">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <span class="text-gray-400 text-sm font-tech uppercase tracking-wide">Comparar (<span id="compare-count">0</span>/3)</span>
@@ -342,14 +357,9 @@
         </div>
         
         <!-- Printable Header (Only Visible on Print) -->
-        <div class="hidden print-header p-4">
-            <div class="flex items-center gap-6 mb-4">
-                <!-- Logos para Impresión (Limpios) -->
-                <img src="https://www.merlindistributor.com/wp-content/uploads/2021/01/Merlin-Distributor-40-anos.png.webp" class="h-12 w-auto" style="filter: none; opacity: 1;">
-                <div class="h-8 w-px bg-gray-400"></div>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" class="h-6 w-auto" style="filter: brightness(0);">
-            </div>
-            <h1 class="text-2xl font-bold text-black border-b border-gray-300 pb-2 mt-4">Comparativa Técnica 2025 (Beta)</h1>
+        <div class="hidden print-header">
+            <img src="https://www.merlindistributor.com/wp-content/uploads/2021/01/Merlin-Distributor-40-anos.png.webp" class="h-10">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" class="h-6">
         </div>
 
         <div class="flex-1 overflow-auto p-6">
@@ -366,11 +376,8 @@
             
             <!-- Printable Header for Detail (Only Visible on Print) -->
             <div class="hidden print-header p-8 pb-0">
-                <div class="flex items-center gap-6 mb-4">
-                    <img src="https://www.merlindistributor.com/wp-content/uploads/2021/01/Merlin-Distributor-40-anos.png.webp" class="h-10 w-auto" style="filter: none;">
-                    <div class="h-8 w-px bg-gray-400"></div>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" class="h-5" style="filter: brightness(0);">
-                </div>
+                <img src="https://www.merlindistributor.com/wp-content/uploads/2021/01/Merlin-Distributor-40-anos.png.webp" class="h-10">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" class="h-6">
             </div>
 
             <div id="modal-content" class="p-8"></div>
@@ -387,6 +394,7 @@
             {
                 id: "s1rii",
                 model: "LUMIX S1RII",
+                price: "$3,297.99",
                 image: "https://static.bhphoto.com/images/images1000x1000/1740473206_1879621.jpg",
                 tagline: "El Nuevo Estándar en Alta Resolución.",
                 description: "Resolución masiva para fotógrafos comerciales y de paisaje que no comprometen el detalle.",
@@ -403,20 +411,23 @@
                 ibis: "IBIS 5 ejes (8.0 pasos)",
                 focus: "PDAF Híbrido + IA",
                 videoMax: "8K 30p / 4K 120p",
+                videoFormats: "MOV, MP4, ProRes, ProRes RAW HQ (interno)",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 6.4K Open Gate",
                 screen: "Triaxial Inclinable",
                 connectivity: "WiFi 5GHz / Bluetooth 5.0",
+                liveStreamingFeature: "USB Webcam (UVC/UAC)",
                 burst: "40 fps (Elec)",
                 codecs: "HEVC, AVC",
                 color: "V-Log 14+ pasos",
                 storage: "CFexpress B + SD UHS-II",
-                filters: ["pdaf", "8k", "6k", "4k", "luts", "ibis", "high_res"], 
+                filters: ["pdaf", "8k", "6k", "4k", "luts", "ibis", "high_res", "dual_slot"], 
                 price_tier: 3
             },
             {
                 id: "s1ii",
                 model: "LUMIX S1II",
+                price: "$3,197.99",
                 image: "https://static.bhphoto.com/images/images500x500/1747129594_1892230.jpg",
                 tagline: "Velocidad y Hibridez Definitiva.",
                 description: "Potencia para flujos de trabajo de postproducción exigentes con sensor apilado.",
@@ -433,20 +444,23 @@
                 ibis: "IBIS 5 ejes (8.0 pasos)",
                 focus: "PDAF Híbrido + IA Deportes",
                 videoMax: "6K 30p Open Gate, 4K 60p",
+                videoFormats: "MOV, MP4, Apple ProRes, ProRes RAW HQ (Interno)",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 6K Open Gate",
                 screen: "Articulada (Free-Angle)",
                 connectivity: "WiFi 5GHz / Bluetooth 5.0",
+                liveStreamingFeature: "USB Webcam (UVC/UAC)",
                 burst: "70 fps (Elec)",
                 codecs: "ProRes RAW Int, ProRes 422",
                 color: "V-Log 15 pasos / LUTs",
                 storage: "CFexpress B + SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip"],
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "dual_slot", "raw_out", "prores_raw"],
                 price_tier: 3
             },
             {
                 id: "s1iie",
                 model: "LUMIX S1IIE",
+                price: "$2,497.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s1m2esbody_lumix_s1iie_mirrorless_camera_1892232.jpg",
                 tagline: "Video Profesional Accesible.",
                 description: "Control sin concesiones heredado de la serie S1 en un paquete optimizado.",
@@ -463,20 +477,23 @@
                 ibis: "IBIS 5 ejes (8.0 pasos)",
                 focus: "PDAF Híbrido + IA",
                 videoMax: "6K 30p Open Gate, 4K 60p",
+                videoFormats: "MOV, MP4, ProRes RAW (vía HDMI)",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 6K Open Gate",
                 screen: "Inclinable + Ángulo Libre",
                 connectivity: "WiFi 5GHz / Bluetooth 5.0",
+                liveStreamingFeature: "USB Webcam (UVC/UAC)",
                 burst: "30 fps (Elec)",
                 codecs: "HEVC, AVC",
                 color: "V-Log 14+ / LUTs",
                 storage: "Doble SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip"],
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "dual_slot", "prores_raw"],
                 price_tier: 2
             },
             {
                 id: "s5iix",
                 model: "LUMIX S5IIX",
+                price: "$2,197.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s5miix_ff_mirrorless_camera_1743629.jpg",
                 tagline: "Flujo de Trabajo Turbo-Cargado.",
                 description: "Diseño 'Black' mate sigiloso con capacidades de streaming y grabación directa a SSD.",
@@ -493,20 +510,23 @@
                 ibis: "Active I.S. (6.5 pasos)",
                 focus: "PDAF Híbrido (779 puntos)",
                 videoMax: "6K 30p Open Gate, C4K 60p",
+                videoFormats: "MOV, MP4, Apple ProRes, All-Intra",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 6K Open Gate",
                 screen: "Articulada (Free-Angle)",
                 connectivity: "WiFi / BT / LAN (USB)",
+                liveStreamingFeature: "RTMP/RTMPS Inalámbrico y USB Tethering",
                 burst: "30 fps (E-Shutter)",
                 codecs: "ProRes 422 HQ, All-Intra",
                 color: "V-Log 14+ / Real Time LUT",
                 storage: "Doble SD UHS-II (SSD USB)",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd"],
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd", "unlimited", "dual_slot", "fan", "raw_out", "real_time_lut", "prores_raw", "streaming"],
                 price_tier: 2
             },
             {
                 id: "s5ii",
                 model: "LUMIX S5II",
+                price: "$1,997.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s5m2body_lumix_s5_ii_mirrorless_1742428.jpg",
                 tagline: "El Punto Óptimo Híbrido.",
                 description: "Introduce el PDAF y la calidad de imagen 6K V-Log en el cuerpo más equilibrado.",
@@ -523,20 +543,23 @@
                 ibis: "Active I.S. (6.5 pasos)",
                 focus: "PDAF Híbrido (779 puntos)",
                 videoMax: "6K 30p Open Gate, 4K 60p",
+                videoFormats: "MOV, MP4",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 6K Open Gate",
                 screen: "Articulada (Free-Angle)",
                 connectivity: "WiFi 5GHz / Bluetooth 5.0",
+                liveStreamingFeature: "USB Webcam (UVC/UAC)",
                 burst: "30 fps (E-Shutter)",
                 codecs: "HEVC, AVC",
                 color: "V-Log 14+ / Real Time LUT",
                 storage: "Doble SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip"],
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "unlimited", "dual_slot", "fan", "real_time_lut", "prores_raw"],
                 price_tier: 2
             },
             {
                 id: "s9",
                 model: "LUMIX S9",
+                price: "$1,497.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s9bodyk_lumix_s9_mirrorless_camera_1828733.jpg",
                 tagline: "Full-Frame Compacta para Redes.",
                 description: "Calidad FF con 6K Open Gate y flujo de trabajo instantáneo para redes sociales.",
@@ -553,21 +576,24 @@
                 ibis: "Active I.S. + E-Stab (5.0 pasos)",
                 focus: "PDAF Híbrido",
                 videoMax: "6K 30p Open Gate (MP4 Lite)",
+                videoFormats: "MP4, MP4 Lite, MOV",
                 hdmi: "HDMI Tipo D (Micro)",
                 openGate: "Sí, 6K Open Gate",
                 screen: "Articulada (Free-Angle)",
                 connectivity: "WiFi 5GHz / Bluetooth",
+                liveStreamingFeature: "No (Transf. rápida a App)",
                 burst: "30 fps",
                 codecs: "HEVC, AVC (MP4 Lite)",
                 color: "V-Log / Real Time LUT Button",
                 storage: "1x SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "vlog"],
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "vlog", "real_time_lut"],
                 price_tier: 1
             },
             // --- SERIE G ---
             {
                 id: "gh7",
                 model: "LUMIX GH7",
+                price: "$2,197.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_gh7body_lumix_gh7_mirrorless_camera_1832646.jpg",
                 tagline: "Potencia de Producción MFT.",
                 description: "La bestia MFT para cineastas con grabación interna ProRes RAW y Audio 32-bit float.",
@@ -584,20 +610,23 @@
                 ibis: "IBIS 5 ejes (7.5 pasos)",
                 focus: "PDAF Híbrido",
                 videoMax: "5.7K 60p, 4K 120p",
+                videoFormats: "MOV, MP4, Apple ProRes, ProRes RAW HQ (Interno)",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 5.8K Open Gate",
                 screen: "Articulada (Free-Angle)",
                 connectivity: "WiFi / BT / Frame.io Cloud",
+                liveStreamingFeature: "RTMP/RTMPS Inalámbrico y USB Tethering",
                 burst: "75 fps (E-Shutter)",
                 codecs: "ProRes RAW HQ, ProRes 422",
                 color: "V-Log 13+ / Real Time LUT",
                 storage: "CFexpress B + SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd"],
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd", "unlimited", "dual_slot", "fan", "raw_out", "real_time_lut", "prores_raw", "streaming"],
                 price_tier: 3
             },
             {
                 id: "g97",
                 model: "LUMIX G97",
+                price: "$847.99",
                 image: "https://static.bhphoto.com/images/images1500x1500/1734378342_1869315.jpg",
                 tagline: "Equilibrio Foto y Video MFT.",
                 description: "Cuerpo tipo DSLR robusto para creadores híbridos.",
@@ -614,20 +643,23 @@
                 ibis: "IBIS 5 ejes (5.0 pasos)",
                 focus: "DFD (Contraste)",
                 videoMax: "4K 60p, FHD 180p",
+                videoFormats: "MP4 (H.264), AVCHD",
                 hdmi: "HDMI Tipo D (Micro)",
                 openGate: "No",
                 screen: "Articulada (Free-Angle)",
                 connectivity: "WiFi / Bluetooth 4.2",
+                liveStreamingFeature: "No",
                 burst: "9 fps / 4K Photo",
                 codecs: "HEVC, AVC",
                 color: "V-Log L 12 pasos",
                 storage: "Doble SD UHS-II",
-                filters: ["4k", "luts", "ibis", "flip"],
+                filters: ["4k", "luts", "ibis", "flip", "unlimited", "dual_slot"],
                 price_tier: 1
             },
             {
                 id: "g100d",
                 model: "LUMIX G100D",
+                price: "$747.99",
                 image: "https://static.bhphoto.com/images/images1000x1000/1704725720_1804791.jpg",
                 tagline: "Vlogging Ultra-Portátil.",
                 description: "La cámara ideal para saltar del smartphone a la calidad mirrorless.",
@@ -644,15 +676,17 @@
                 ibis: "Hybrid I.S. (5 ejes)",
                 focus: "DFD (Contraste) con Eye AF",
                 videoMax: "4K 30p, FHD 60p",
+                videoFormats: "MP4",
                 hdmi: "HDMI Tipo D (Micro)",
                 openGate: "No",
                 screen: "Articulada (Selfie)",
                 connectivity: "WiFi / Bluetooth",
+                liveStreamingFeature: "USB Webcam (UVC/UAC)",
                 burst: "10 fps / 4K Photo",
                 codecs: "MP4",
                 color: "V-Log L",
                 storage: "1x SD UHS-I",
-                filters: ["4k", "luts", "ibis", "flip", "vlog"],
+                filters: ["4k", "luts", "ibis", "flip", "vlog", "streaming"],
                 price_tier: 1
             }
         ];
@@ -745,6 +779,8 @@
                 if(cam.openGate && (cam.openGate.includes("Sí") || cam.filters.includes('6k'))) {
                     specialBadges += `<span class="bg-indigo-600 text-white text-[9px] px-1 rounded border border-indigo-500">Open Gate</span>`;
                 }
+                if(cam.filters.includes('dual_slot')) specialBadges += `<span class="bg-green-800 text-white text-[9px] px-1 rounded border border-green-600">Dual Slot</span>`;
+                if(cam.filters.includes('fan')) specialBadges += `<span class="bg-red-900 text-white text-[9px] px-1 rounded border border-red-700"><i data-lucide="fan" class="inline w-2 h-2"></i></span>`;
 
                 let html = '';
 
@@ -781,6 +817,15 @@
                                     <i data-lucide="activity" class="w-4 h-4 text-lumix-red"></i> <span>${cam.ibis}</span>
                                 </div>
                             </div>
+                            
+                            <!-- Precio en Grid View -->
+                            <div class="mb-4 pt-2 border-t border-gray-700 flex justify-between items-end">
+                                <div>
+                                    <div class="text-2xl font-bold text-white leading-none">${cam.price}</div>
+                                    <div class="text-[10px] text-gray-500 uppercase tracking-wider">MSRP (FOB USA)</div>
+                                </div>
+                            </div>
+
                             <button onclick="openModal('${cam.id}')" class="w-full bg-transparent border border-gray-600 hover:border-white hover:text-white text-gray-300 py-2 rounded text-sm font-semibold transition flex items-center justify-center gap-2">
                                 <i data-lucide="info" class="w-4 h-4"></i> Ver Detalles
                             </button>
@@ -794,12 +839,19 @@
                              <span class="${badgeColor} text-white text-[10px] font-bold px-1 rounded absolute bottom-0 left-0">${cam.sensorType}</span>
                         </div>
                         <div class="flex-grow text-center sm:text-left">
-                            <h3 class="text-lg font-bold text-white flex items-center justify-center sm:justify-start gap-2">${cam.model} <div class="flex gap-1">${specialBadges}</div></h3>
+                            <h3 class="text-lg font-bold text-white flex items-center justify-center sm:justify-start gap-2">${cam.model} <div class="flex gap-1 flex-wrap">${specialBadges}</div></h3>
                             <div class="text-xs text-gray-400 mt-1 grid grid-cols-2 sm:flex sm:gap-4">
                                 <span class="flex items-center gap-1 justify-center sm:justify-start"><i data-lucide="film" class="w-3 h-3 text-lumix-red"></i> ${cam.videoMax}</span>
                                 <span class="flex items-center gap-1 justify-center sm:justify-start"><i data-lucide="scan-face" class="w-3 h-3 text-lumix-red"></i> ${cam.focus}</span>
                             </div>
                         </div>
+                        
+                        <!-- Precio en List View -->
+                        <div class="text-center sm:text-right px-4 border-l border-gray-700 hidden sm:block min-w-[120px]">
+                            <div class="text-xl font-bold text-white">${cam.price}</div>
+                            <div class="text-[9px] text-gray-500 uppercase">MSRP</div>
+                        </div>
+
                         <div class="flex flex-row sm:flex-col gap-2 w-full sm:w-auto">
                              <button onclick="openModal('${cam.id}')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white text-xs px-3 py-2 rounded transition">Detalles</button>
                              <label class="flex-1 bg-black/30 hover:bg-black/50 text-gray-300 text-xs px-3 py-2 rounded cursor-pointer flex items-center justify-center gap-2 transition select-none">
@@ -868,6 +920,7 @@
                                         <img src="${c.image}" class="h-full w-full object-contain">
                                     </div>
                                     <div class="text-xl font-bold">${c.model}</div>
+                                    <div class="text-lg font-bold text-lumix-red mt-1">${c.price}</div>
                                 </th>
                             `).join('')}
                         </tr>
@@ -875,6 +928,7 @@
                     <tbody class="text-sm">
                         ${generateRow('Sensor', selectedCams, 'sensorDetail')}
                         ${generateRow('Video Max', selectedCams, 'videoMax')}
+                        ${generateRow('Formato Archivo', selectedCams, 'videoFormats')}
                         ${generateRow('Enfoque (AF)', selectedCams, 'focus')}
                         ${generateRow('Estabilización', selectedCams, 'ibis')}
                         ${generateRow('Pantalla', selectedCams, 'screen')}
@@ -925,7 +979,8 @@
                         <div class="bg-white rounded-lg aspect-square flex items-center justify-center mb-4 p-4 border border-gray-700">
                              <img src="${cam.image}" class="w-full h-full object-contain">
                         </div>
-                        <h2 class="text-3xl font-bold text-white mb-2">${cam.model}</h2>
+                        <h2 class="text-3xl font-bold text-white mb-1">${cam.model}</h2>
+                        <div class="text-2xl font-bold text-lumix-red mb-2">${cam.price} <span class="text-sm font-normal text-gray-400">MSRP</span></div>
                         <span class="bg-lumix-red text-white text-sm font-bold px-3 py-1 rounded inline-block mb-4">${cam.sensorType}</span>
                     </div>
                     <div class="w-full md:w-2/3 space-y-6">
@@ -938,6 +993,8 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             ${specBox('Sensor', cam.sensorDetail)}
                             ${specBox('Video', cam.videoMax)}
+                            ${specBox('Formatos de Grabación', cam.videoFormats)}
+                            ${specBox('Live Streaming', cam.liveStreamingFeature)}
                             ${specBox('Enfoque (AF)', cam.focus)}
                             ${specBox('Estabilización', cam.ibis)}
                             ${specBox('Pantalla', cam.screen)}
@@ -965,7 +1022,7 @@
         function exportToCSV() {
             const selectedCams = cameras.filter(c => selectedComparison.includes(c.id));
             if(selectedCams.length === 0) return;
-            let csv = "data:text/csv;charset=utf-8,\uFEFFEspecificación," + selectedCams.map(c => `"${c.model}"`).join(",") + "\r\n";
+            let csv = "data:text/csv;charset=utf-8,\uFEFFEspecificación," + selectedCams.map(c => `"${c.model} (${c.price})"`).join(",") + "\r\n";
             const keys = [
                 { id: 'sensorDetail', l: 'Sensor' }, { id: 'videoMax', l: 'Video' }, { id: 'focus', l: 'Enfoque' }, 
                 { id: 'ibis', l: 'Estabilización' }, { id: 'screen', l: 'Pantalla' }, { id: 'connectivity', l: 'Conectividad' }

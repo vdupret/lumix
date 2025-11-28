@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selector Lumix Mirrorless 2025 (v24 Final)</title>
+    <title>Selector Lumix Mirrorless 2025 (v25 Fixed)</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -184,12 +184,6 @@
             }
             .print-header img {
                 height: 25px !important;
-                /* Eliminamos el filtro grayscale para que se vea el logo correctamente si es blanco sobre fondo claro,
-                   aunque en print suele ser fondo blanco. Como el logo es blanco, para impresión podría ser invisible.
-                   Añadimos un fondo oscuro temporal o invertimos para impresión si el logo es blanco puro.
-                   El logo es "white.png". En impresión (fondo blanco), no se verá.
-                   Truco: invertimos el color para impresión.
-                */
                 filter: invert(1) !important; 
             }
 
@@ -228,7 +222,6 @@
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-6">
                 <!-- Logo Merlin (ACTUALIZADO) -->
-                <!-- Quitamos el bg-white/10 ya que el logo es blanco puro y se ve bien sobre oscuro -->
                 <div class="p-1 rounded">
                     <img src="https://i.ibb.co/wFzQPqk3/Logo-Merlin-40-white.png" alt="Merlin Distributor" class="h-10 w-auto object-contain">
                 </div>
@@ -239,7 +232,7 @@
                 <!-- Logo Lumix -->
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" alt="LUMIX Logo" class="h-5 w-auto object-contain brightness-0 invert">
                 
-                <h1 class="text-lg font-light tracking-wide text-gray-400 hidden lg:block">Selector <span class="font-bold text-white">2025 (v24 Final)</span></h1>
+                <h1 class="text-lg font-light tracking-wide text-gray-400 hidden lg:block">Selector <span class="font-bold text-white">2025 (v25 Fixed)</span></h1>
             </div>
             
             <!-- Live Search -->
@@ -981,8 +974,8 @@
                         <tr>
                             <th class="p-4 bg-gray-800 text-gray-400 border-b border-gray-700 sticky left-0 z-10 w-48">Especificación</th>
                             ${selectedCams.map(c => `
-                                <th class="p-4 bg-gray-800 text-white border-b border-gray-700 min-w-[200px]">
-                                    <div class="h-24 bg-white rounded mb-2 flex items-center justify-center p-2 border border-gray-700">
+                                <th class="p-4 bg-gray-800 text-white border-b border-gray-700 min-w-[160px]"> <!-- REDUCED MIN-WIDTH to 160px -->
+                                    <div class="h-16 w-full max-w-[120px] mx-auto bg-white rounded mb-2 flex items-center justify-center p-1 border border-gray-700"> <!-- REDUCED HEIGHT to h-16 and CENTERED -->
                                         <img src="${c.image}" class="h-full w-full object-contain">
                                     </div>
                                     <div class="text-xl font-bold">${c.model}</div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selector Lumix Mirrorless 2025 (v25 Fixed)</title>
+    <title>Selector Lumix Beta (Pro Filters)</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,7 +26,8 @@
                             red: '#E60012',
                             dark: '#121212',
                             gray: '#2A2A2A',
-                            light: '#E5E5E5'
+                            light: '#E5E5E5',
+                            gold: '#FFD700'
                         }
                     },
                     fontFamily: {
@@ -65,15 +66,18 @@
             border-color: #E60012;
         }
 
+        .featured-label {
+            color: #FFD700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+        }
+
         /* --- MOTOR DE IMPRESIÓN RESTAURADO (v22 Logic) --- */
-        /* Volvemos exactamente a lo que funcionó bien */
         @media print {
             @page { 
                 margin: 1cm; 
                 size: landscape; 
             }
             
-            /* 1. Reset Total */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -84,23 +88,20 @@
                 border-radius: 0 !important;
             }
 
-            /* 2. Ocultar interfaz SPA */
             header, aside, #compare-tray, #toast, #search-input, .group, .flex.gap-2, #btn-grid, #btn-list, .print-hidden, button, .no-print { 
                 display: none !important; 
             }
 
-            /* 3. Estructura de Página */
             body { 
                 background: white !important; 
-                font-family: Arial, Helvetica, sans-serif !important; /* Fuente de sistema limpia */
+                font-family: Arial, Helvetica, sans-serif !important; 
                 margin: 0 !important;
                 padding: 0 !important;
-                font-size: 10pt; /* Restaurado a 10pt para legibilidad */
+                font-size: 10pt; 
             }
 
             main { display: none !important; }
 
-            /* 4. Visibilidad de Modales */
             body.modal-open #comparison-modal, 
             body.modal-open #detail-modal {
                 display: block !important;
@@ -111,43 +112,37 @@
                 border: none !important;
             }
 
-            /* 5. Estilo Tabla tipo Excel (Restaurado v22) */
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
                 margin-top: 10px;
                 border: 1px solid #000 !important;
-                /* Eliminado table-layout: fixed que causó el error */
             }
             
             thead { display: table-header-group; }
             tr { page-break-inside: avoid; }
             
             th, td {
-                border: 1px solid #000 !important; /* Bordes negros sólidos */
+                border: 1px solid #000 !important; 
                 padding: 6px 8px !important;
                 text-align: left;
                 vertical-align: middle;
             }
             
-            /* Encabezados de Columna (Modelos) */
             th { 
-                background-color: #f0f0f0 !important; /* Gris suave Excel */
+                background-color: #f0f0f0 !important; 
                 font-weight: bold; 
                 text-align: center !important;
                 vertical-align: bottom !important;
-                /* Eliminado width: 20% fijo */
             }
 
-            /* Encabezados de Fila (Especificaciones) */
             td:first-child {
                 background-color: #fafafa !important;
                 font-weight: bold;
-                width: 140px !important; /* Ancho fijo probado */
-                white-space: nowrap !important; /* Restaurado nowrap para evitar cortes feos */
+                width: 140px !important; 
+                white-space: nowrap !important; 
             }
 
-            /* Imágenes en tabla muy discretas */
             th img {
                 max-height: 40px !important;
                 width: auto !important;
@@ -155,14 +150,12 @@
                 display: block;
             }
             
-            /* Precios */
             .price-tag {
                 color: #000 !important;
                 font-size: 11pt;
                 font-weight: bold;
             }
 
-            /* 6. Header de Impresión Simple */
             .print-header {
                 display: flex !important;
                 justify-content: space-between;
@@ -187,7 +180,6 @@
                 filter: invert(1) !important; 
             }
 
-            /* 7. Ajustes para Detalle Individual */
             #detail-modal .flex-col { display: block !important; }
             #detail-modal .w-full, #detail-modal .md\:w-1\/3, #detail-modal .md\:w-2\/3 { 
                 width: 100% !important; 
@@ -200,7 +192,6 @@
                 margin-bottom: 10px;
                 padding: 5px;
             }
-            /* Convertir las cajas de specs en una lista simple para imprimir */
             #detail-modal .grid {
                 display: block !important;
             }
@@ -232,7 +223,7 @@
                 <!-- Logo Lumix -->
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lumix_logo.svg/2560px-Lumix_logo.svg.png" alt="LUMIX Logo" class="h-5 w-auto object-contain brightness-0 invert">
                 
-                <h1 class="text-lg font-light tracking-wide text-gray-400 hidden lg:block">Selector <span class="font-bold text-white">2025 (v25 Fixed)</span></h1>
+                <h1 class="text-lg font-light tracking-wide text-gray-400 hidden lg:block">Selector <span class="font-bold text-white">Lumix Beta</span></h1>
             </div>
             
             <!-- Live Search -->
@@ -242,7 +233,7 @@
                 </div>
                 <input type="text" id="search-input" 
                     class="bg-gray-800 border border-gray-700 text-gray-100 text-sm rounded-lg focus:ring-1 focus:ring-lumix-red focus:border-lumix-red block w-full pl-10 pr-10 p-2.5 placeholder-gray-500 transition" 
-                    placeholder="Buscar: ARRI LogC3, 44.3MP, CFexpress..."
+                    placeholder="Buscar: 8K, ProRes RAW, Frame.io, 177 MP..."
                     onkeyup="filterCameras()">
                 <button onclick="clearSearch()" id="clear-search-btn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-white hidden">
                     <i data-lucide="x-circle" class="h-4 w-4"></i>
@@ -267,90 +258,77 @@
 
     <main class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full flex flex-col lg:flex-row gap-8">
         
-        <!-- Sidebar Filters -->
+        <!-- Sidebar Filters NEW STRUCTURE v2 -->
         <aside class="w-full lg:w-72 flex-shrink-0 space-y-6">
             
-            <!-- FILTRO 1: ECOSISTEMA -->
-            <div class="bg-lumix-gray p-5 rounded-lg border border-gray-700">
-                <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
-                    <i data-lucide="aperture" class="w-4 h-4 text-lumix-red"></i> Ecosistema
-                </h3>
-                <div class="space-y-3">
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-sensor w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="Full-Frame">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">Montura L (Full-Frame)</span>
-                    </label>
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-sensor w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="MFT">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">Micro 4/3 (MFT)</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- FILTRO 2: PRESTACIONES CRÍTICAS -->
+            <!-- GRUPO 1: PRODUCTION PRO -->
             <div class="bg-gray-800 p-5 rounded-lg border border-lumix-red shadow-lg relative">
-                <div class="absolute top-0 right-0 bg-lumix-red text-white text-[9px] font-bold px-2 py-1 uppercase">Pro Features</div>
+                 <div class="absolute top-0 right-0 bg-lumix-red text-white text-[9px] font-bold px-2 py-1 uppercase">WORKHORSE</div>
                 <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
-                    <i data-lucide="alert-circle" class="w-4 h-4 text-lumix-red"></i> Prestaciones Críticas
+                    <i data-lucide="clapperboard" class="w-4 h-4 text-lumix-red"></i> PRODUCTION PRO
                 </h3>
                 <div class="space-y-3">
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="unlimited">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">Grabación Ilimitada</span>
+                     <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="ssd">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Grabación en SSD</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="dual_slot">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">Doble Ranura / CFexpress</span>
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="audio">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm font-bold featured-label">Audio 32 bit ⭐️</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="arri_log">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm font-bold text-lumix-red">ARRI LogC3 (New)</span>
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="timecode">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Timecode In/Out</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-900 text-lumix-red focus:ring-lumix-red" value="xlr">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Entrada de audio XLR</span>
                     </label>
                 </div>
             </div>
 
-            <!-- Calidad de Video -->
+            <!-- GRUPO 2: FORMATOS -->
             <div class="bg-lumix-gray p-5 rounded-lg border border-gray-700">
                 <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
-                    <i data-lucide="film" class="w-4 h-4 text-lumix-red"></i> Calidad Video
+                    <i data-lucide="film" class="w-4 h-4 text-lumix-red"></i> FORMATOS
                 </h3>
                 <div class="space-y-3">
+                     <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="arri_log">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm font-bold featured-label">Arri LogC3 ⭐️</span>
+                    </label>
+                     <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="6k">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm font-bold featured-label">6K / Open Gate ⭐️</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="prores_raw">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">ProRes RAW</span>
+                    </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="8k">
                         <span class="text-gray-300 group-hover:text-white transition text-sm">8K Ultra High Res</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="6k">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">6K / Open Gate</span>
-                    </label>
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="4k">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">4K Profesional</span>
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="unlimited">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Grabación Ilimitada</span>
                     </label>
                 </div>
             </div>
 
-            <!-- Tecnologías -->
+            <!-- GRUPO 3: TECH -->
             <div class="bg-lumix-gray p-5 rounded-lg border border-gray-700">
                 <h3 class="text-white font-tech text-lg uppercase tracking-wider mb-4 border-b border-gray-600 pb-2 flex items-center gap-2">
-                    <i data-lucide="cpu" class="w-4 h-4 text-lumix-red"></i> Tecnologías
+                    <i data-lucide="cpu" class="w-4 h-4 text-lumix-red"></i> TECH
                 </h3>
                 <div class="space-y-3">
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="pdaf">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">Enfoque Ojos (PDAF)</span>
-                    </label>
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="streaming">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">Live Streaming</span>
-                    </label>
-                    <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="real_time_lut">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">LUT en Tiempo Real</span>
+                        <span class="text-gray-300 group-hover:text-white transition text-sm font-bold featured-label">Lut en Tiempo Real ⭐️</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="prores_raw">
-                        <span class="text-gray-300 group-hover:text-white transition text-sm">ProRes RAW</span>
+                        <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="pdaf">
+                        <span class="text-gray-300 group-hover:text-white transition text-sm">Enfoque PDAF</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group" title="Sistema de ventilación activo">
                         <input type="checkbox" class="filter-feat w-5 h-5 rounded border-gray-600 bg-gray-800 text-lumix-red focus:ring-lumix-red" value="fan">
@@ -456,31 +434,31 @@
                 price: "$3,297.99",
                 image: "https://static.bhphoto.com/images/images1000x1000/1740473206_1879621.jpg",
                 tagline: "El Nuevo Estándar en Alta Resolución.",
-                description: "Resolución masiva para fotógrafos comerciales y de paisaje que no comprometen el detalle. Soporte ARRI LogC3.",
+                description: "Resolución masiva para fotógrafos comerciales y de paisaje. Soporta grabación 8.1K, ProRes RAW interno y flujo de trabajo directo a la nube.",
                 features: [
-                    "Sensor Full-Frame CMOS 44.3 MP (35.8mm x 23.9mm)",
-                    "Disparo en ráfaga AFS/AFC a 40 fps con obturador electrónico",
-                    "Vídeo 8.1K (17:9) / 8K (16:9) / Soporte ARRI LogC3 (Upgrade)",
-                    "AF híbrido de fase con tecnología de IA avanzada",
-                    "Estabilización líder en su clase"
+                    "Sensor Full-Frame 44,3 MP (Modo Alta Res 177 MP)",
+                    "Vídeo 8.1K/8K (10 bits) / C4K 120p",
+                    "Integración nativa Frame.io Camera to Cloud",
+                    "AF Híbrido de Fase + Contraste + DFD con IA",
+                    "Estabilización IBIS 5 ejes (8,0 pasos)"
                 ],
                 sensorType: "Full-Frame",
-                sensorDetail: "CMOS BSI 44.3MP (35.8x23.9mm)",
+                sensorDetail: "Full-Frame 44,3 MP (Alta Res 177 MP)",
                 mount: "Montura L",
-                ibis: "IBIS 5 ejes (8.0 pasos)",
-                focus: "PDAF Híbrido + IA",
-                videoMax: "8K 30p / 4K 120p",
-                videoFormats: "MOV, MP4, ProRes, ProRes RAW HQ",
+                ibis: "IBIS 5 ejes (8,0 pasos); Dual I.S. 2",
+                focus: "AF Híbrido de Fase + Contraste + DFD con IA",
+                videoMax: "8.1K 30p / C4K 120p",
+                videoFormats: "MOV, MP4, ProRes RAW HQ (Interno)",
                 hdmi: "HDMI Tipo A (Full)",
-                openGate: "Sí, 6.4K Open Gate",
+                openGate: "Sí, en modo 8K/6K",
                 screen: "Triaxial Inclinable",
-                connectivity: "WiFi 5GHz / Bluetooth 5.0",
-                liveStreamingFeature: "USB Webcam (UVC/UAC)",
-                burst: "40 fps (Elec)",
-                codecs: "HEVC, AVC",
-                color: "V-Log / ARRI LogC3* (Req. SFU3A)",
-                storage: "CFexpress B + SD UHS-II",
-                filters: ["pdaf", "8k", "6k", "4k", "luts", "ibis", "high_res", "dual_slot", "arri_log"], 
+                connectivity: "Wi-Fi 5GHz / Bluetooth 5.0 / Frame.io",
+                liveStreamingFeature: "Live Streaming (RTMP/RTMPS), USB Tethering",
+                burst: "30 fps (AFC)",
+                codecs: "HEVC, AVC, ProRes",
+                color: "V-Log / ARRI LogC3 (Con licencia opcional o actualización)",
+                storage: "CFexpress Tipo B + SD UHS-II (SSD USB)",
+                filters: ["pdaf", "8k", "6k", "4k", "luts", "ibis", "high_res", "dual_slot", "arri_log", "streaming", "audio", "ssd", "timecode", "xlr"], 
                 price_tier: 3
             },
             {
@@ -489,31 +467,31 @@
                 price: "$3,197.99",
                 image: "https://static.bhphoto.com/images/images500x500/1747129594_1892230.jpg",
                 tagline: "Velocidad y Hibridez Definitiva.",
-                description: "Potencia para flujos de trabajo de postproducción exigentes con sensor apilado y soporte ARRI.",
+                description: "Potencia para flujos de trabajo exigentes con sensor parcialmente apilado, ráfagas de 70 fps y soporte ARRI.",
                 features: [
-                    "Sensor CMOS Parcialmente Apilado 24.1 MP (35.8mm x 23.8mm)",
-                    "Ráfaga 70 fps (Elec) / Focus Stacking",
+                    "Sensor CMOS Parcialmente Apilado 24,1 MP (Alta Res 96 MP)",
+                    "Ráfaga 70 fps (Obturador Electrónico)",
                     "Grabación 6K 30p / 5.1K 60p Open Gate",
-                    "ARRI LogC3* (Upgrade) y V-Log 15+ pasos",
-                    "Reconocimiento AF híbrido + Deportes"
+                    "V-Log 14+ pasos / ARRI LogC3 (Opcional)",
+                    "Doble ranura CFexpress B + SD"
                 ],
                 sensorType: "Full-Frame",
-                sensorDetail: "CMOS Stacked 24.1MP (35.8x23.8mm)",
+                sensorDetail: "CMOS Parcialmente Apilado 24,1 MP",
                 mount: "Montura L",
-                ibis: "IBIS 5 ejes (8.0 pasos)",
-                focus: "PDAF Híbrido + IA Deportes",
-                videoMax: "6K 30p Open Gate, 4K 60p",
-                videoFormats: "MOV, MP4, ProRes, ProRes RAW HQ",
+                ibis: "IBIS 5 ejes (8,0 pasos); Dual I.S. 2",
+                focus: "AF Híbrido de Fase + Contraste + DFD con IA",
+                videoMax: "6K 30p / 5.1K 60p",
+                videoFormats: "MOV, MP4, ProRes",
                 hdmi: "HDMI Tipo A (Full)",
-                openGate: "Sí, 6K Open Gate",
-                screen: "Articulada (Free-Angle)",
-                connectivity: "WiFi 5GHz / Bluetooth 5.0",
-                liveStreamingFeature: "USB Webcam (UVC/UAC)",
-                burst: "70 fps (Elec)",
-                codecs: "ProRes RAW Int, ProRes 422",
-                color: "V-Log / ARRI LogC3* (Req. SFU3A)",
-                storage: "CFexpress B + SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "dual_slot", "raw_out", "prores_raw", "arri_log"],
+                openGate: "Sí, 6K / 5.1K Open Gate",
+                screen: "Triaxial Inclinable",
+                connectivity: "Wi-Fi 5GHz / Bluetooth 5.0 / Frame.io",
+                liveStreamingFeature: "Live Streaming (RTMP/RTMPS), USB Tethering",
+                burst: "70 fps (AFC)",
+                codecs: "HEVC, AVC, ProRes",
+                color: "V-Log / ARRI LogC3 (Con licencia opcional o actualización)",
+                storage: "CFexpress Tipo B + SD UHS-II (SSD USB)",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "dual_slot", "raw_out", "prores_raw", "arri_log", "streaming", "audio", "ssd", "timecode", "xlr"],
                 price_tier: 3
             },
             {
@@ -522,31 +500,31 @@
                 price: "$2,497.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s1m2esbody_lumix_s1iie_mirrorless_camera_1892232.jpg",
                 tagline: "Video Profesional Accesible.",
-                description: "Control sin concesiones heredado de la serie S1. Sensor 24.2MP y opción ARRI LogC3.",
+                description: "Hereda las especificaciones de video clave de la S1II (6K Open Gate, V-Log 14+, ProRes RAW interno) en un paquete optimizado.",
                 features: [
-                    "Sensor CMOS 24.2 MP (35.8mm x 23.8mm)",
-                    "Grabación 6K 30p 4:2:0 10-bit Open Gate",
-                    "Soporte ARRI LogC3* (Upgrade Key)",
-                    "Ráfaga 30 fps (Elec)",
-                    "Doble ranura compatible con CFexpress (según uso)"
+                    "Sensor CMOS BSI Full-Frame 24,2 MP",
+                    "Grabación interna C4K/4K 60p en ProRes RAW HQ",
+                    "Open Gate 6K 30p (4:2:0 10 bits)",
+                    "Soporte V-Log / Opción ARRI LogC3",
+                    "Ranura CFexpress + SD"
                 ],
                 sensorType: "Full-Frame",
-                sensorDetail: "CMOS BSI 24.2MP (35.8x23.8mm)",
+                sensorDetail: "CMOS BSI Full-Frame 24,2 MP",
                 mount: "Montura L",
-                ibis: "IBIS 5 ejes (8.0 pasos)",
-                focus: "PDAF Híbrido + IA",
-                videoMax: "6K 30p Open Gate, 4K 60p",
-                videoFormats: "MOV, MP4, ProRes RAW (HDMI)",
+                ibis: "IBIS 5 ejes (8,0 pasos); IS Activo",
+                focus: "AF Híbrido de Fase + Contraste + DFD con IA",
+                videoMax: "6K 30p / 4K 60p",
+                videoFormats: "MOV, MP4, ProRes RAW HQ (Interno)",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 6K Open Gate",
-                screen: "Inclinable + Ángulo Libre",
-                connectivity: "WiFi 5GHz / Bluetooth 5.0",
-                liveStreamingFeature: "USB Webcam (UVC/UAC)",
-                burst: "30 fps (Elec)",
+                screen: "Triaxial Inclinable",
+                connectivity: "Wi-Fi 5GHz / Bluetooth 5.0 / Frame.io",
+                liveStreamingFeature: "Live Streaming (RTMP/RTMPS), USB Tethering",
+                burst: "30 fps (AFC)",
                 codecs: "HEVC, AVC",
-                color: "V-Log / ARRI LogC3* (Req. SFU3A)",
-                storage: "CFexpress B + SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "dual_slot", "prores_raw", "arri_log"],
+                color: "V-Log / Opción ARRI LogC3",
+                storage: "CFexpress Tipo B + SD UHS-II (SSD USB)",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "dual_slot", "prores_raw", "arri_log", "streaming", "audio", "ssd", "xlr"],
                 price_tier: 2
             },
             {
@@ -555,31 +533,31 @@
                 price: "$2,197.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s5miix_ff_mirrorless_camera_1743629.jpg",
                 tagline: "Flujo de Trabajo Turbo-Cargado.",
-                description: "Diseño 'Black' mate sigiloso con capacidades de streaming y grabación directa a SSD.",
+                description: "Grabación directa a SSD por USB-C (para ProRes HQ) y opciones avanzadas de (Wi-Fi/Cable). Diseñada para producciones que necesitan eficiencia en la transferencia de datos.",
                 features: [
-                    "Sensor CMOS de fotograma completo de 24,2 MP",
-                    "Grabación ilimitada de vídeo 6k30p y C4K/4K 60p 4:2:2 10-bit",
-                    "Grabación a SSD vía USB y salida RAW por HDMI",
-                    "Sistema AF de detección de fase de 779 puntos",
-                    "Disparo continuo 30 fps, ISO 51200, Streaming Wi-Fi/Ethernet"
+                    "Sensor CMOS Full-Frame 24,2 MP",
+                    "Grabación directa a SSD vía USB-C",
+                    "ProRes RAW y All-Intra",
+                    "AF Híbrido de Fase",
+                    "Cuerpo 'Black' mate"
                 ],
                 sensorType: "Full-Frame",
-                sensorDetail: "Full-Frame 24.2MP",
+                sensorDetail: "CMOS Full-Frame 24,2 megapíxeles",
                 mount: "Montura L",
-                ibis: "Active I.S. (6.5 pasos)",
-                focus: "PDAF Híbrido (779 puntos)",
-                videoMax: "6K 30p Open Gate, C4K 60p",
+                ibis: "IBIS 5 ejes (6,5 pasos); Dual I.S. 2",
+                focus: "AF Híbrido de Fase + Contraste + DFD",
+                videoMax: "6K 30p / C4K 60p",
                 videoFormats: "MOV, MP4, Apple ProRes, All-Intra",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 6K Open Gate",
-                screen: "Articulada (Free-Angle)",
-                connectivity: "WiFi / BT / LAN (USB)",
-                liveStreamingFeature: "RTMP/RTMPS Inalámbrico y USB Tethering",
-                burst: "30 fps (E-Shutter)",
-                codecs: "ProRes 422 HQ, All-Intra",
-                color: "V-Log 14+ / Real Time LUT",
-                storage: "Doble SD UHS-II (SSD USB)",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd", "unlimited", "dual_slot", "fan", "raw_out", "real_time_lut", "prores_raw", "streaming"],
+                screen: "Articulada de ángulo libre",
+                connectivity: "Wi-Fi 5GHz / Bluetooth 5.0",
+                liveStreamingFeature: "No",
+                burst: "30 fps (Elec) / 7 fps (Mec)",
+                codecs: "ProRes 422 HQ, All-Intra, HEVC, AVC",
+                color: "V-Log / LUT en tiempo real",
+                storage: "Doble ranura SD UHS-II (SSD por USB-C)",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd", "unlimited", "dual_slot", "fan", "raw_out", "real_time_lut", "prores_raw", "timecode", "xlr"],
                 price_tier: 2
             },
             {
@@ -588,31 +566,31 @@
                 price: "$1,997.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s5m2body_lumix_s5_ii_mirrorless_1742428.jpg",
                 tagline: "El Punto Óptimo Híbrido.",
-                description: "Introduce el PDAF y la calidad de imagen 6K V-Log en el cuerpo más equilibrado.",
+                description: "Introduce el PDAF y la calidad de imagen 6K V-Log en el cuerpo más compacto y asequible de la serie. Excelente valor para quien fotografía y graba video por igual.",
                 features: [
-                    "Sensor CMOS de fotograma completo de 24,2 MP",
-                    "Sistema AF de detección de fase de 779 puntos",
+                    "Sensor CMOS Full-Frame 24,2 MP",
+                    "AF Híbrido de Fase (779 puntos)",
                     "Active I.S. para caminar y grabar",
                     "Grabación de vídeo 6K 30p Open Gate y 4K 60p ilimitado (Fan)",
-                    "LUTs en tiempo real para gradación de color en cámara"
+                    "LUTs en tiempo real"
                 ],
                 sensorType: "Full-Frame",
-                sensorDetail: "Full-Frame 24.2MP",
+                sensorDetail: "CMOS Full-Frame 24,2 megapíxeles",
                 mount: "Montura L",
-                ibis: "Active I.S. (6.5 pasos)",
-                focus: "PDAF Híbrido (779 puntos)",
-                videoMax: "6K 30p Open Gate, 4K 60p",
+                ibis: "IBIS 5 ejes (6,5 pasos); Dual I.S. 2",
+                focus: "AF Híbrido de Fase + Contraste + DFD",
+                videoMax: "6K 30p / C4K 60p",
                 videoFormats: "MOV, MP4",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 6K Open Gate",
-                screen: "Articulada (Free-Angle)",
-                connectivity: "WiFi 5GHz / Bluetooth 5.0",
-                liveStreamingFeature: "USB Webcam (UVC/UAC)",
-                burst: "30 fps (E-Shutter)",
+                screen: "Articulada de ángulo libre",
+                connectivity: "Wi-Fi 5GHz / Bluetooth 5.0",
+                liveStreamingFeature: "No",
+                burst: "30 fps (Elec) / 7 fps (Mec)",
                 codecs: "HEVC, AVC",
-                color: "V-Log 14+ / Real Time LUT",
-                storage: "Doble SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "unlimited", "dual_slot", "fan", "real_time_lut", "prores_raw"],
+                color: "V-Log / LUT en tiempo real",
+                storage: "Doble ranura SD UHS-II",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "unlimited", "dual_slot", "fan", "real_time_lut", "prores_raw", "xlr"],
                 price_tier: 2
             },
             {
@@ -620,31 +598,31 @@
                 model: "LUMIX S9",
                 price: "$1,497.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_s9bodyk_lumix_s9_mirrorless_camera_1828733.jpg",
-                tagline: "Full-Frame Compacta para Redes.",
-                description: "Calidad FF con 6K Open Gate y flujo de trabajo instantáneo para redes sociales.",
+                tagline: "La Full-Frame más Compacta y Rápida para Redes Sociales.",
+                description: "Calidad FF con 6K Open Gate y flujo de trabajo LUTs en tiempo real (MP4+) para publicación instantánea.",
                 features: [
-                    "Alta calidad de imagen con sensor de fotograma completo de 24,2 MP",
-                    "Marco flexible (Open Gate) para recortes verticales",
-                    "Ajustes preestablecidos de firma (LUTs) con botón dedicado",
-                    "Vídeo 6K MP4 Lite para transferencia rápida a smartphone",
-                    "Enfoque automático rápido y disparo estable"
+                    "Sensor CMOS Full-Frame 24,2 MP",
+                    "Formato MP4 Lite para transferencia rápida",
+                    "Botón LUT dedicado en cuerpo",
+                    "Estabilización Activa híbrida",
+                    "Compacta y ligera"
                 ],
                 sensorType: "Full-Frame",
-                sensorDetail: "Full-Frame 24.2MP",
+                sensorDetail: "CMOS Full-Frame 24,2 megapíxeles",
                 mount: "Montura L",
-                ibis: "Active I.S. + E-Stab (5.0 pasos)",
-                focus: "PDAF Híbrido",
-                videoMax: "6K 30p Open Gate (MP4 Lite)",
-                videoFormats: "MP4, MP4 Lite, MOV",
+                ibis: "IBIS 5 ejes (5,0 pasos); IS Activo",
+                focus: "AF Híbrido de Fase + Contraste + DFD",
+                videoMax: "6K 30p (Open Gate)",
+                videoFormats: "MP4 Lite, MP4, MOV",
                 hdmi: "HDMI Tipo D (Micro)",
                 openGate: "Sí, 6K Open Gate",
-                screen: "Articulada (Free-Angle)",
-                connectivity: "WiFi 5GHz / Bluetooth",
-                liveStreamingFeature: "No (Transf. rápida a App)",
-                burst: "30 fps",
+                screen: "Articulada de ángulo libre",
+                connectivity: "Wi-Fi 5GHz / Bluetooth 5.0",
+                liveStreamingFeature: "No (Transferencia a App Lumix Lab)",
+                burst: "30 fps (Elec)",
                 codecs: "HEVC, AVC (MP4 Lite)",
-                color: "V-Log / Real Time LUT Button",
-                storage: "1x SD UHS-II",
+                color: "V-Log / LUT en tiempo real (Botón dedicado)",
+                storage: "1x Ranura SD UHS-II",
                 filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "vlog", "real_time_lut"],
                 price_tier: 1
             },
@@ -654,32 +632,32 @@
                 model: "LUMIX GH7",
                 price: "$2,197.99",
                 image: "https://www.bhphotovideo.com/images/fb/panasonic_dc_gh7body_lumix_gh7_mirrorless_camera_1832646.jpg",
-                tagline: "Potencia de Producción MFT.",
-                description: "La bestia MFT para cineastas con grabación interna ProRes RAW y Audio 32-bit float.",
+                tagline: "Potencia de Producción en un Cuerpo MFT.",
+                description: "Flujo de trabajo Apple ProRes RAW a SSD, audio flotante de 32-bit (vía adaptador XLR), y robustez para cualquier entorno. Ideal para broadcast y producciones en gimbals.",
                 features: [
+                    "Sensor BSI Live MOS (MFT) 25,2 MP",
                     "Grabación interna de Apple ProRes RAW",
-                    "Primera grabación de audio flotante de 32 bits del mundo (sin necesidad de ajustar ganancia)",
-                    "Compatibilidad nativa con Adobe Frame.io Camera to Cloud",
-                    "Sensor de 25,5 MP y rango dinámico de 13+ pasos",
-                    "LUT en tiempo real para aplicar nuevas expresiones de color"
+                    "Audio flotante de 32 bits (con DMW-XLR2)",
+                    "Soporte nativo Adobe Frame.io Camera to Cloud",
+                    "Ventilador de refrigeración activo"
                 ],
                 sensorType: "MFT",
-                sensorDetail: "BSI Live MOS 25.2MP",
-                mount: "Micro 4/3",
-                ibis: "IBIS 5 ejes (7.5 pasos)",
-                focus: "PDAF Híbrido",
-                videoMax: "5.7K 60p, 4K 120p",
-                videoFormats: "MOV, MP4, Apple ProRes, ProRes RAW HQ (Interno)",
+                sensorDetail: "CMOS BSI Live MOS (MFT) 25,2 megapíxeles",
+                mount: "Montura Micro Cuatro Tercios",
+                ibis: "IBIS 5 ejes (7,5 pasos); Dual I.S. 2",
+                focus: "AF Híbrido de Fase + Contraste + DFD",
+                videoMax: "5.7K 60p / 4K 120p",
+                videoFormats: "MOV, MP4, Apple ProRes, ProRes RAW HQ",
                 hdmi: "HDMI Tipo A (Full)",
                 openGate: "Sí, 5.8K Open Gate",
-                screen: "Articulada (Free-Angle)",
-                connectivity: "WiFi / BT / Frame.io Cloud",
-                liveStreamingFeature: "RTMP/RTMPS Inalámbrico y USB Tethering",
-                burst: "75 fps (E-Shutter)",
-                codecs: "ProRes RAW HQ, ProRes 422",
-                color: "V-Log 13+ / Real Time LUT",
-                storage: "CFexpress B + SD UHS-II",
-                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd", "unlimited", "dual_slot", "fan", "raw_out", "real_time_lut", "prores_raw", "streaming"],
+                screen: "Articulada de ángulo libre e inclinable",
+                connectivity: "Wi-Fi 5GHz / Bluetooth 5.0 / Frame.io",
+                liveStreamingFeature: "Live Streaming (RTMP/RTMPS), USB Tethering",
+                burst: "75 fps (Elec) / 60 fps (AFC)",
+                codecs: "ProRes RAW HQ, ProRes 422, All-Intra",
+                color: "V-Log / LUT en tiempo real",
+                storage: "CFexpress Tipo B + SD UHS-II",
+                filters: ["pdaf", "6k", "4k", "luts", "ibis", "flip", "ssd", "unlimited", "dual_slot", "fan", "raw_out", "real_time_lut", "prores_raw", "streaming", "audio", "arri_log", "timecode", "xlr"],
                 price_tier: 3
             },
             {
@@ -687,32 +665,32 @@
                 model: "LUMIX G97",
                 price: "$847.99",
                 image: "https://static.bhphoto.com/images/images1500x1500/1734378342_1869315.jpg",
-                tagline: "Equilibrio Foto y Video MFT.",
-                description: "Cuerpo tipo DSLR robusto para creadores híbridos.",
+                tagline: "El Equilibrio entre Foto y Video MFT.",
+                description: "Cuerpo tipo DSLR con agarre cómodo, V-Log L pre-instalado y jacks de audio completos. Excelente valor para video 4K premium no broadcast.",
                 features: [
-                    "Sensor CMOS de 20,3 MP sin filtro de paso bajo",
-                    "5.0 pasos 5 ejes Dual I.S. 2 para tomas nítidas a mano",
-                    "Grabación de video 4K 30p sin límite de tiempo",
-                    "V-Log L preinstalado para gradación de color",
-                    "OLED LVF de alta resolución y monitor de ángulo libre"
+                    "Sensor CMOS (MFT) 20,3 MP",
+                    "Video 4K 30p / FHD 60p",
+                    "V-Log L preinstalado",
+                    "Cuerpo robusto resistente a salpicaduras/polvo",
+                    "IBIS de 5 ejes Dual I.S. 2"
                 ],
                 sensorType: "MFT",
-                sensorDetail: "MFT 20.3MP",
-                mount: "Micro 4/3",
-                ibis: "IBIS 5 ejes (5.0 pasos)",
+                sensorDetail: "CMOS (MFT) 20,3 megapíxeles",
+                mount: "Montura Micro Cuatro Tercios",
+                ibis: "IBIS 5 ejes (5,0 pasos); Dual I.S. 2",
                 focus: "DFD (Contraste)",
-                videoMax: "4K 60p, FHD 180p",
-                videoFormats: "MP4 (H.264), AVCHD",
+                videoMax: "4K 30p / FHD 60p",
+                videoFormats: "MP4, AVCHD",
                 hdmi: "HDMI Tipo D (Micro)",
                 openGate: "No",
-                screen: "Articulada (Free-Angle)",
-                connectivity: "WiFi / Bluetooth 4.2",
+                screen: "Articulada de ángulo libre",
+                connectivity: "Wi-Fi / Bluetooth 4.2",
                 liveStreamingFeature: "No",
-                burst: "9 fps / 4K Photo",
-                codecs: "HEVC, AVC",
-                color: "V-Log L 12 pasos",
-                storage: "Doble SD UHS-II",
-                filters: ["4k", "luts", "ibis", "flip", "unlimited", "dual_slot"],
+                burst: "9 fps (AFS) / 6 fps (AFC)",
+                codecs: "AVCHD, MP4",
+                color: "V-Log L (Preinstalado)",
+                storage: "1x Ranura SD UHS-II",
+                filters: ["4k", "luts", "ibis", "flip", "unlimited", "dual_slot", "xlr"],
                 price_tier: 1
             },
             {
@@ -720,32 +698,32 @@
                 model: "LUMIX G100D",
                 price: "$747.99",
                 image: "https://static.bhphoto.com/images/images1000x1000/1704725720_1804791.jpg",
-                tagline: "Vlogging Ultra-Portátil.",
-                description: "La cámara ideal para saltar del smartphone a la calidad mirrorless.",
+                tagline: "La Herramienta Definitiva para Vlogging Ultra-Portátil.",
+                description: "La más ligera de la línea, con Audio OZO (micrófono con seguimiento de rostro) y pantalla selfie articulada. Ideal para un fácil salto de calidad desde el smartphone.",
                 features: [
-                    "Sensor de 20.3 MP optimizado para vlogging",
-                    "Audio OZO de Nokia con seguimiento facial (sin micro externo)",
-                    "Pantalla articulada brillante ideal para selfies",
-                    "Grabación 4K 30p y modo Video Selfie",
-                    "Conectividad fácil con smartphone para subir a redes"
+                    "Sensor CMOS (MFT) 20,3 MP",
+                    "Audio OZO de Nokia (Seguimiento sonoro)",
+                    "Modo Video Selfie con indicador visual",
+                    "Visor OLED mejorado",
+                    "Conectividad fácil para smartphones"
                 ],
                 sensorType: "MFT",
-                sensorDetail: "MFT 20.3MP",
-                mount: "Micro 4/3",
-                ibis: "Hybrid I.S. (5 ejes)",
-                focus: "DFD (Contraste) con Eye AF",
-                videoMax: "4K 30p, FHD 60p",
+                sensorDetail: "CMOS (MFT) 20,3 megapíxeles",
+                mount: "Montura Micro Cuatro Tercios",
+                ibis: "HYBRID I.S. de 5 ejes (Electrónico + Lente)",
+                focus: "DFD (Contraste)",
+                videoMax: "4K 30p / FHD 60p",
                 videoFormats: "MP4",
                 hdmi: "HDMI Tipo D (Micro)",
                 openGate: "No",
-                screen: "Articulada (Selfie)",
-                connectivity: "WiFi / Bluetooth",
-                liveStreamingFeature: "USB Webcam (UVC/UAC)",
-                burst: "10 fps / 4K Photo",
-                codecs: "MP4",
-                color: "V-Log L",
-                storage: "1x SD UHS-I",
-                filters: ["4k", "luts", "ibis", "flip", "vlog", "streaming"],
+                screen: "Articulada de ángulo libre (Selfie)",
+                connectivity: "Wi-Fi / Bluetooth 4.2",
+                liveStreamingFeature: "No",
+                burst: "10 fps (AFS) / 6 fps (AFC)",
+                codecs: "MP4 (H.264)",
+                color: "V-Log L (Preinstalado)",
+                storage: "1x Ranura SD UHS-II",
+                filters: ["4k", "luts", "ibis", "flip", "vlog"],
                 price_tier: 1
             }
         ];
@@ -791,22 +769,25 @@
 
         // --- Filter & Search Logcic ---
         function filterCameras() {
-            const sensorFilters = Array.from(document.querySelectorAll('.filter-sensor:checked')).map(cb => cb.value);
-            const featFilters = Array.from(document.querySelectorAll('.filter-feat:checked')).map(cb => cb.value);
+            const filterGroups = {
+                feat: Array.from(document.querySelectorAll('.filter-feat:checked')).map(cb => cb.value)
+            };
             const searchText = searchInput.value.toLowerCase();
             
             clearSearchBtn.classList.toggle('hidden', searchText.length === 0);
 
             const filtered = cameras.filter(cam => {
-                const sensorMatch = sensorFilters.length === 0 || sensorFilters.includes(cam.sensorType === "Full-Frame" ? "Full-Frame" : "MFT");
-                const featMatch = featFilters.length === 0 || featFilters.every(f => cam.filters.includes(f));
+                // Logic: For each checked filter, the camera MUST have that specific tag.
+                // This creates an "AND" relationship between selected filters.
+                // If no filters are checked in a category, that category is ignored (matches all).
+                const featMatch = filterGroups.feat.length === 0 || filterGroups.feat.every(f => cam.filters.includes(f));
                 
                 const searchMatch = searchText === "" || 
                                     cam.model.toLowerCase().includes(searchText) ||
                                     cam.sensorDetail.toLowerCase().includes(searchText) ||
                                     cam.filters.join(" ").includes(searchText);
 
-                return sensorMatch && featMatch && searchMatch;
+                return featMatch && searchMatch;
             });
 
             renderCameras(filtered);
@@ -992,6 +973,7 @@
                         ${generateRow('Estabilización', selectedCams, 'ibis')}
                         ${generateRow('Pantalla', selectedCams, 'screen')}
                         ${generateRow('Conectividad', selectedCams, 'connectivity')}
+                        ${generateRow('Live Streaming', selectedCams, 'liveStreamingFeature')}
                         ${generateRow('Ráfaga / Foto', selectedCams, 'burst')}
                         ${generateRow('Color / LUTs', selectedCams, 'color')}
                         ${generateRow('HDMI / OpenGate', selectedCams, 'hdmi')}
